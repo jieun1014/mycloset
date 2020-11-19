@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.info.ReadBoardInfo;
+import com.example.myapplication.ReadBoardInfo;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.adapter.BoardLoadAdapter;
 import com.example.myapplication.R;

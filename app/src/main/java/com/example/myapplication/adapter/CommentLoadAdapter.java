@@ -9,9 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.info.CommentReadInfo;
+import com.example.myapplication.CommentReadInfo;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.ReadBoardInfo;
 
 import java.util.ArrayList;
 

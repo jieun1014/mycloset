@@ -1,20 +1,29 @@
 package com.example.myapplication.adapter;
 
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.myapplication.BoardFragments.BoardFragment;
+import com.example.myapplication.BoardFragments.BoardReadFragment;
 import com.example.myapplication.MainActivity;
-import com.example.myapplication.info.ReadBoardInfo;
+import com.example.myapplication.ReadBoardInfo;
 import com.example.myapplication.R;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class BoardLoadAdapter extends RecyclerView.Adapter<BoardLoadAdapter.CustomViewHolder> {
 
