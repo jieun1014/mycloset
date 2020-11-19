@@ -50,10 +50,6 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         activity = null;
     }
 
-    public static BoardFragment newInstance() {
-        return new BoardFragment();
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_board, container, false);
@@ -122,6 +118,5 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         transaction.replace(R.id.mainLayout, boardReadFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-
     }
 }

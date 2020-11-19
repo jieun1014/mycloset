@@ -50,28 +50,6 @@ public class BoardLoadAdapter extends RecyclerView.Adapter<BoardLoadAdapter.Cust
         holder.Title.setText(arrayList.get(position).getTitle());
         holder.Writer.setText(arrayList.get(position).getWriter());
         holder.WriteDate.setText(arrayList.get(position).getWriteDate());
-
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onItemSelected(v, position);
-
-                /*BoardReadFragment boardReadFragment = new BoardReadFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("Category", arrayList.get(position).getCategory());
-                bundle.putString("Title", arrayList.get(position).getTitle());
-                bundle.putString("Contents", arrayList.get(position).getContents());
-                bundle.putString("Writer", arrayList.get(position).getWriter());
-                bundle.putString("WriteDate", arrayList.get(position).getWriteDate());
-                boardReadFragment.setArguments(bundle);
-                Log.d(TAG, bundle.getString("Category"));
-
-                //Intent intent = new Intent(context, MainActivity.class);
-                //intent.putExtra("Category", arrayList.get(pos).getCategory());
-                activity = (MainActivity) context;
-                activity.onBoardFragmentChange(2);
-            }
-        });*/
     }
 
     @Override

@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-//1119 박소은 테스트
+
     ClosetFragment closetFragment;
     CodyFragment codyFragment;
     BoardFragment boardFragment;
@@ -63,19 +63,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
-    public void onBoardFragmentChange(int index) {
-        if (index == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardFragment).commit();
-        } else if (index == 1) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardWriteFragment).commit();
-        } else if (index == 2)  {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardReadFragment).commit();
-
-
-        }
-    }
-
 }
