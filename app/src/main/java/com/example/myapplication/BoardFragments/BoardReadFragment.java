@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,11 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myapplication.CommentReadInfo;
-import com.example.myapplication.CommentWriteInfo;
+import com.example.myapplication.info.CommentReadInfo;
+import com.example.myapplication.info.CommentWriteInfo;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.WriteBoardInfo;
 import com.example.myapplication.adapter.CommentLoadAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

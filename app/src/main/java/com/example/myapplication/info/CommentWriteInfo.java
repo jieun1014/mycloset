@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.info;
 
 public class CommentWriteInfo {
     private String CommentWriter;

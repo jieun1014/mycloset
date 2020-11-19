@@ -1,20 +1,26 @@
-package com.example.myapplication;
+package com.example.myapplication.info;
 
-public class WriteBoardInfo {
+public class ReadBoardInfo {
+    private String Did;
     private String Category;
     private String Title;
-    private String Contents;
     private String Writer;
     private String WriteDate;
-    private String time;
 
-    public WriteBoardInfo(String Category, String Title, String Contents, String Writer, String WriteDate, String time)   {
+    public ReadBoardInfo(String Did, String Category, String Title, String Writer, String WriteDate) {
+        this.Did = Did;
         this.Category = Category;
         this.Title = Title;
-        this.Contents = Contents;
         this.Writer = Writer;
         this.WriteDate = WriteDate;
-        this.time = time;
+    }
+
+    public String getDid() {
+        return Did;
+    }
+
+    public void setDid(String did) {
+        Did = did;
     }
 
     public String getCategory() {
@@ -33,14 +39,6 @@ public class WriteBoardInfo {
         Title = title;
     }
 
-    public String getContents() {
-        return Contents;
-    }
-
-    public void setContents(String contents) {
-        Contents = contents;
-    }
-
     public String getWriter() {
         return Writer;
     }
@@ -55,13 +53,5 @@ public class WriteBoardInfo {
 
     public void setWriteDate(String writeDate) {
         WriteDate = writeDate;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 }
