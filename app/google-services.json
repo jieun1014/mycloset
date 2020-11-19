@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "7206135437",
-    "firebase_url": "https://mycloset-5a926.firebaseio.com",
-    "project_id": "mycloset-5a926",
-    "storage_bucket": "mycloset-5a926.appspot.com"
+    "project_number": "221673003242",
+    "firebase_url": "https://test-ae7be.firebaseio.com",
+    "project_id": "test-ae7be",
+    "storage_bucket": "test-ae7be.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:7206135437:android:a9eb603840eac9d639a4c4",
+        "mobilesdk_app_id": "1:221673003242:android:2241b06b39d72583fb1f93",
         "android_client_info": {
-          "package_name": "com.myclosetapplication"
+          "package_name": "com.example.myapplication"
         }
       },
       "oauth_client": [
         {
-          "client_id": "7206135437-gan99c1e85o876i3m94faricbqh93qkp.apps.googleusercontent.com",
+          "client_id": "221673003242-0f5o9avfe9jasjokujubppibmggghjhq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDgJxSaaKxBUdqZmxjNfnZKRSy5KSIBv3o"
+          "current_key": "AIzaSyCJnv4iBYqGW1Ogbihvq_ckDj1kOqK41io"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "7206135437-gan99c1e85o876i3m94faricbqh93qkp.apps.googleusercontent.com",
+              "client_id": "221673003242-0f5o9avfe9jasjokujubppibmggghjhq.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
