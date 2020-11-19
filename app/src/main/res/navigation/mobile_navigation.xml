@@ -22,4 +22,28 @@
         android:name="com.myclosetapplication.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_closet"
+        android:name="com.myclosetapplication.fragments.ClosetFragment"
+        android:label="@string/title_closet"
+        tools:layout="@layout/fragment_closet" />
+
+    <fragment
+        android:id="@+id/navigation_cody"
+        android:name="com.myclosetapplication.fragments.CodyFragment"
+        android:label="@string/title_cody"
+        tools:layout="@layout/fragment_cody" />
+
+    <fragment
+        android:id="@+id/navigation_board"
+        android:name="com.myclosetapplication.fragments.BoardFragment"
+        android:label="@string/title_board"
+        tools:layout="@layout/fragment_board" />
+
+    <fragment
+        android:id="@+id/navigation_my"
+        android:name="com.myclosetapplication.fragments.MyFragment"
+        android:label="@string/title_my"
+        tools:layout="@layout/fragment_my" />
 </navigation>
