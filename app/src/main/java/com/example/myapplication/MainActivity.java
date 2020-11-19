@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+//1119 박소은 테스트
     ClosetFragment closetFragment;
     CodyFragment codyFragment;
     BoardFragment boardFragment;
