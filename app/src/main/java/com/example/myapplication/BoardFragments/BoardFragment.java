@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,7 +37,9 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
     private ArrayList<ReadBoardInfo> arrayList;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    String[] items = {"전체", "코디 질문", "코디 자랑"};
     FloatingActionButton WriteBtn;
+    Spinner spinner;
 
     MainActivity activity;
 
@@ -60,8 +65,6 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
 
-        ReadBoard();
-
         WriteBtn = (FloatingActionButton)root.findViewById(R.id.WriteBtn);
         WriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +74,34 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
                 transaction.replace(R.id.mainLayout, boardWriteFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+            }
+        });
+
+        spinner = (Spinner)root.findViewById(R.id.spinner);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+          getActivity(), android.R.layout.simple_spinner_item, items
+        );
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String str = parent.getItemAtPosition(position).toString();
+                if (str.equals("전체")) {
+                    ReadBoard();
+                    arrayList.clear();
+                } else if (str.equals("코디 질문")) {
+                    QueryReadBoard("[코디 질문]");
+                    arrayList.clear();
+                } else  {
+                    QueryReadBoard("[코디 자랑]");
+                    arrayList.clear();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                return;
             }
         });
 
@@ -92,6 +123,34 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
                                         document.getData().get("title").toString(),
                                         document.getData().get("writer").toString(),
                                         document.getData().get("writeDate").toString()));
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+
+                        }
+                    }
+                });
+        adapter = new BoardLoadAdapter(arrayList, getContext(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void QueryReadBoard(String query) {
+        db.collection("Boards")
+                .orderBy("time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("category").toString().equals(query)) {
+                                    arrayList.add(new ReadBoardInfo(
+                                            document.getId(),
+                                            document.getData().get("category").toString(),
+                                            document.getData().get("title").toString(),
+                                            document.getData().get("writer").toString(),
+                                            document.getData().get("writeDate").toString()));
+                                }
                             }
                             adapter.notifyDataSetChanged();
                         } else {

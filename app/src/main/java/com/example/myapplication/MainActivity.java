@@ -64,17 +64,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    public void onBoardFragmentChange(int index) {
-        if (index == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardFragment).commit();
-        } else if (index == 1) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardWriteFragment).commit();
-        } else if (index == 2)  {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainLayout, boardReadFragment).commit();
-
-
-        }
-    }
-
 }

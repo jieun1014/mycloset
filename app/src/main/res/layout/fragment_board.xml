@@ -13,10 +13,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <SearchView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_round" />
+            android:orientation="horizontal">
+
+            <SearchView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_round" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_round"
+                android:spinnerMode="dropdown"/>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
