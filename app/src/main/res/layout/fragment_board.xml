@@ -19,9 +19,11 @@
             android:orientation="horizontal">
 
             <SearchView
+                android:id="@+id/searchView"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_round" />
+                android:background="@drawable/border_round"
+                android:queryHint="제목으로 검색하세요." />
 
             <Spinner
                 android:id="@+id/spinner"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,8 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String[] items = {"전체", "코디 질문", "코디 자랑"};
+    String str;
+    SearchView searchView;
     FloatingActionButton WriteBtn;
     Spinner spinner;
 
@@ -86,15 +89,15 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String str = parent.getItemAtPosition(position).toString();
+                str = parent.getItemAtPosition(position).toString();
                 if (str.equals("전체")) {
                     ReadBoard();
                     arrayList.clear();
                 } else if (str.equals("코디 질문")) {
-                    QueryReadBoard("[코디 질문]");
+                    ReadBoardCategory("[코디 질문]");
                     arrayList.clear();
                 } else  {
-                    QueryReadBoard("[코디 자랑]");
+                    ReadBoardCategory("[코디 자랑]");
                     arrayList.clear();
                 }
             }
@@ -102,6 +105,29 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 return;
+            }
+        });
+
+        searchView = (SearchView)root.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (str.equals("전체")) {
+                    SearchBoardAll(query);
+                    arrayList.clear();
+                } else if (str.equals("코디 질문")) {
+                    SearchBoardCategory("[코디 질문]", query);
+                    arrayList.clear();
+                } else  {
+                    SearchBoardCategory("[코디 자랑]", query);
+                    arrayList.clear();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
@@ -134,7 +160,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         recyclerView.setAdapter(adapter);
     }
 
-    private void QueryReadBoard(String query) {
+    private void SearchBoardAll(String query) {
         db.collection("Boards")
                 .orderBy("time", Query.Direction.DESCENDING)
                 .get()
@@ -143,7 +169,63 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getData().get("category").toString().equals(query)) {
+                                if (document.getData().get("title").toString().contains(query)) {
+                                    arrayList.add(new ReadBoardInfo(
+                                            document.getId(),
+                                            document.getData().get("category").toString(),
+                                            document.getData().get("title").toString(),
+                                            document.getData().get("writer").toString(),
+                                            document.getData().get("writeDate").toString()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+
+                        }
+                    }
+                });
+        adapter = new BoardLoadAdapter(arrayList, getContext(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void ReadBoardCategory(String category) {
+        db.collection("Boards")
+                .orderBy("time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("category").toString().equals(category)) {
+                                    arrayList.add(new ReadBoardInfo(
+                                            document.getId(),
+                                            document.getData().get("category").toString(),
+                                            document.getData().get("title").toString(),
+                                            document.getData().get("writer").toString(),
+                                            document.getData().get("writeDate").toString()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+
+                        }
+                    }
+                });
+        adapter = new BoardLoadAdapter(arrayList, getContext(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void SearchBoardCategory(String category, String query) {
+        db.collection("Boards")
+                .orderBy("time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("category").toString().equals(category) && document.getData().get("title").toString().contains(query)) {
                                     arrayList.add(new ReadBoardInfo(
                                             document.getId(),
                                             document.getData().get("category").toString(),
