@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,42 +9,39 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/btnLeft"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/leftarrow" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/closet"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="내 옷장" />
+            <ImageButton
+                android:id="@+id/btnLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/leftarrow" />
 
-        <ImageButton
-            android:id="@+id/btnRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/rightarrow"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/closet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="내 옷장" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
+            <ImageButton
+                android:id="@+id/btnRight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/rightarrow" />
+        </LinearLayout>
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,6 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="가방" />
+
                 <Button
                     android:id="@+id/btnAccessary"
                     android:layout_width="wrap_content"
@@ -101,35 +99,37 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <LinearLayout
+        <SearchView
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:orientation="horizontal"
-            android:layout_weight="1"/>
+            android:layout_height="wrap_content" />
 
         <GridView
             android:id="@+id/closetGridView"
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:numColumns="3"
-            android:layout_weight="10"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter">
+            android:gravity="center"
+            android:numColumns="3"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            >
+
         </GridView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnClosetWrite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_action_add"
-            android:tint="#000000"
-            app:backgroundTint="#FFFFFF"
-            app:fabSize="normal"
-            app:rippleColor="#000000" />
     </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnClosetWrite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
+        android:src="@drawable/codyicon"
+        android:tint="#000000"
+        app:backgroundTint="#FFFFFF"
+        app:fabSize="normal"
+        app:rippleColor="#000000" />
+
+</FrameLayout>
