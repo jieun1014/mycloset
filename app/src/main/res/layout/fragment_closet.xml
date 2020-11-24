@@ -46,12 +46,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <Button
                     android:id="@+id/btnOuter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="아우터" />
 
@@ -59,6 +62,8 @@
                     android:id="@+id/btnTop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="상의" />
 
@@ -66,6 +71,8 @@
                     android:id="@+id/btnBottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="하의" />
 
@@ -73,6 +80,8 @@
                     android:id="@+id/btnDress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="원피스" />
 
@@ -80,6 +89,8 @@
                     android:id="@+id/btnShoes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="신발" />
 
@@ -87,6 +98,8 @@
                     android:id="@+id/btnBag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="가방" />
 
@@ -94,6 +107,8 @@
                     android:id="@+id/btnAccessary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="악세사리" />
             </LinearLayout>
