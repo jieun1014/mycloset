@@ -5,16 +5,35 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.BoardFragments.BoardWriteFragment;
+import com.example.myapplication.info.ReadBoardInfo;
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.adapter.BoardLoadAdapter;
 import com.example.myapplication.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-public class CodyFragment extends Fragment {
+import java.util.ArrayList;
+
+public class CodyFragment extends Fragment{
+    private Context context;
+
+    FloatingActionButton WriteBtn;
 
     MainActivity activity;
 
@@ -30,23 +49,27 @@ public class CodyFragment extends Fragment {
         activity = null;
     }
 
-    public static CodyFragment newInstance() {
-        return new CodyFragment();
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_cody, container, false);
 
-        Button b1 = (Button)root.findViewById(R.id.button);
-        b1.setOnClickListener(new View.OnClickListener() {
+
+        WriteBtn = (FloatingActionButton)root.findViewById(R.id.WriteBtn);
+        WriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "코디입니다.", Toast.LENGTH_LONG).show();
+                CodyWriteFragment codyWriteFragment = new CodyWriteFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.mainLayout, codyWriteFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
+
         return root;
     }
+
+
 
 }
