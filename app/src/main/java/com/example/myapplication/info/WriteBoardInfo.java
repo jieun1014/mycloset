@@ -8,7 +8,7 @@ public class WriteBoardInfo {
     private String WriteDate;
     private String time;
 
-    public WriteBoardInfo(String Category, String Title, String Contents, String Writer, String WriteDate, String time)   {
+    public WriteBoardInfo(String Category, String Title, String Contents, String Writer, String WriteDate, String time) {
         this.Category = Category;
         this.Title = Title;
         this.Contents = Contents;

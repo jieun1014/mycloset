@@ -26,8 +26,6 @@ public class ClosetFragment extends Fragment {
     ClothAdapter clothAdapter;
 
 
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
