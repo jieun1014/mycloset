@@ -1,10 +1,18 @@
 package com.example.myapplication.BoardFragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.ActivityChooserView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -13,23 +21,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class BoardWriteFragment extends Fragment {
     MainActivity activity;
-    Button SubmitBtn;
-    EditText TitleEditText, ContentsEditText;
-    RadioButton QuestionRdb, BoastRdb;
-    String Title, Contents, Category;
+    private Context context;
+    private ImageView imageView;
+    private Button SubmitBtn, SelectPicBtn;
+    private EditText TitleEditText, ContentsEditText;
+    private RadioButton QuestionRdb, BoastRdb;
+    private String Title, Contents, Category;
+    private LinearLayout parent;
+    private ArrayList<String> pathList = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -53,6 +71,28 @@ public class BoardWriteFragment extends Fragment {
         ContentsEditText = (EditText) root.findViewById(R.id.ContentsEditText);
         QuestionRdb = (RadioButton) root.findViewById(R.id.QuestionRdb);
         BoastRdb = (RadioButton) root.findViewById(R.id.BoastRdb);
+        SelectPicBtn = (Button) root.findViewById(R.id.SelectPicBtn);
+        imageView = (ImageView) root.findViewById(R.id.imageView);
+        parent = root.findViewById(R.id.ImageContents);
+
+        SelectPicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)    {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    } else {
+                        startToast("권한을 허용해 주세요.");
+                    }
+                }   else {
+                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                    startActivityForResult(intent, 0);
+                }
+            }
+        });
 
         SubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +102,39 @@ public class BoardWriteFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public void onRequestPermissionsResults(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                    startActivity(intent);
+                }  else {
+                    startToast("권한을 허용해 주세요.");
+                }
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data)  {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 0:
+                if (resultCode == Activity.RESULT_OK)   {
+                    String profilePath = data.getStringExtra("profilePath");
+                    pathList.add(profilePath);
+                    // DB에 사진 포함 코드 작성 부분
+
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ImageView imageView = new ImageView(getContext());
+                    imageView.setLayoutParams(layoutParams);
+                    Glide.with(activity).load(profilePath).override(800).into(imageView);
+                    parent.addView(imageView);
+                }
+                break;
+        }
     }
 
     private void submit()   {

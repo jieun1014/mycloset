@@ -4,6 +4,7 @@
     android:id="@+id/framelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     tools:context=".BoardFragments.BoardWriteFragment">
 
     <LinearLayout
@@ -114,9 +115,15 @@
                         android:padding="5dp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ImageContents"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+
                 <Button
                     android:id="@+id/SelectPicBtn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="사진첨부" />
 
@@ -125,6 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="작성" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
