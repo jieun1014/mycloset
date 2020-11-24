@@ -13,21 +13,21 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/button3"
+            android:id="@+id/btnLeft"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/leftarrow" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/closet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="내 옷장" />
 
         <ImageButton
-            android:id="@+id/button2"
+            android:id="@+id/btnRight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,48 +52,48 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btnOuter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="아우터" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/btnTop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="상의" />
 
                 <Button
-                    android:id="@+id/button6"
+                    android:id="@+id/btnBottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="하의" />
 
                 <Button
-                    android:id="@+id/button7"
+                    android:id="@+id/btnDress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="원피스" />
 
                 <Button
-                    android:id="@+id/button8"
+                    android:id="@+id/btnShoes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="신발" />
 
                 <Button
-                    android:id="@+id/button9"
+                    android:id="@+id/btnBag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="가방" />
                 <Button
-                    android:id="@+id/button10"
+                    android:id="@+id/btnAccessary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -118,11 +118,18 @@
         </GridView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="match_parent"
+            android:id="@+id/btnClosetWrite"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:src="@drawable/ic_action_add" />
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_action_add"
+            android:tint="#000000"
+            app:backgroundTint="#FFFFFF"
+            app:fabSize="normal"
+            app:rippleColor="#000000" />
     </LinearLayout>
 
 </LinearLayout>

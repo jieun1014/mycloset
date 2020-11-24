@@ -65,14 +65,14 @@ public class ClosetFragment extends Fragment {
         clothAdapter.addItem(new ClothItem(R.drawable.shoes1));
 
         gridView.setAdapter(clothAdapter);
-
-        Button b1 = (Button)root.findViewById(R.id.button);
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "옷장입니다.", Toast.LENGTH_LONG).show();
-            }
-        });
+//
+//        Button b1 = (Button)root.findViewById(R.id.button);
+//        b1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(), "옷장입니다.", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         return root;
     }
