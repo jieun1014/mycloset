@@ -3,10 +3,12 @@ package com.example.myapplication.BoardFragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,9 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.info.CommentReadInfo;
 import com.example.myapplication.info.CommentWriteInfo;
 import com.example.myapplication.MainActivity;
@@ -39,6 +44,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
@@ -49,6 +55,7 @@ public class BoardReadFragment extends Fragment  {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<CommentReadInfo> arrayList;
+    private LinearLayout parent;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean flag=false;
     MainActivity activity;
@@ -79,6 +86,7 @@ public class BoardReadFragment extends Fragment  {
         Content = (TextView)root.findViewById(R.id.Content);
         Writer = (TextView)root.findViewById(R.id.Writer);
         WriteDate = (TextView)root.findViewById(R.id.WriteDate);
+        parent = root.findViewById(R.id.ImageContent);
 
         CommentEditText = (EditText) root.findViewById(R.id.CommentEditText);
         CommentSubmitBtn = (Button) root.findViewById(R.id.CommentSubmitBtn);
@@ -139,11 +147,29 @@ public class BoardReadFragment extends Fragment  {
     private void ReadBoard() {
         DocumentReference docRef = db.collection("Boards").document(Did);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        ArrayList<String> ImageUri = new ArrayList<>();
+                        String ab = (document.getData().get("images").toString());
+                        String[] cd = ab.split(",");
+                        ArrayList<String> ef = new ArrayList<>(Arrays.asList(cd));
+
+
+                        for (int i=0; i < cd.length; i++) {
+                            String ck = ef.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
+
+                            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            ImageView imageView = new ImageView(getContext());
+                            imageView.setLayoutParams(layoutParams);
+                            Glide.with(getContext()).load(ck).into(imageView);
+                            parent.addView(imageView);
+                        }
+
+
                         Category.setText(document.getData().get("category").toString());
                         Title.setText(document.getData().get("title").toString());
                         Content.setText(document.getData().get("contents").toString());

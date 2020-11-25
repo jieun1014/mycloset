@@ -7,21 +7,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.ActivityChooserView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,8 +32,19 @@ import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.info.WriteBoardInfo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,8 +57,10 @@ public class BoardWriteFragment extends Fragment {
     private EditText TitleEditText, ContentsEditText;
     private RadioButton QuestionRdb, BoastRdb;
     private String Title, Contents, Category;
+    private int PathCount, successCount;
     private LinearLayout parent;
     private ArrayList<String> pathList = new ArrayList<>();
+    private ArrayList<String> contentsList = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -125,7 +138,6 @@ public class BoardWriteFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK)   {
                     String profilePath = data.getStringExtra("profilePath");
                     pathList.add(profilePath);
-                    // DB에 사진 포함 코드 작성 부분
 
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     ImageView imageView = new ImageView(getContext());
@@ -157,16 +169,71 @@ public class BoardWriteFragment extends Fragment {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference();
+                            DocumentReference documentReference = db.collection("Boards").document();
 
-                            long now = System.currentTimeMillis();
-                            Date date = new Date(now);
-                            SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                            SimpleDateFormat nFormat = new SimpleDateFormat("yy년 MM월 dd일 HH:mm");
-                            String time = nFormat.format(date);
-                            String time2 = mFormat.format(date);
 
-                            WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, "Writer", time, time2);
-                            db.collection("Boards").document().set(writeBoardInfo);
+
+                            for (int i = 0; i < parent.getChildCount(); i++){
+                                System.out.println("여기" + pathList + ", " + PathCount);
+
+                                System.out.println(documentReference.getId());
+                                contentsList.add(pathList.get(PathCount));
+                                final StorageReference mountainImageRef = storageRef.child("BoardImages/" + documentReference.getId() + "/" + PathCount + ".jpg");
+                                try {
+                                    InputStream stream = new FileInputStream(new File(pathList.get(PathCount)));
+                                    StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index", ""+PathCount).build();
+                                    UploadTask uploadTask = mountainImageRef.putStream(stream, metadata);
+                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            final int index = Integer.parseInt(taskSnapshot.getMetadata().getCustomMetadata("index"));
+                                            mountainImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    contentsList.set(index, uri.toString());
+                                                    successCount++;
+                                                    if (pathList.size() == successCount){
+                                                        //완료
+                                                        long now = System.currentTimeMillis();
+                                                        Date date = new Date(now);
+                                                        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                                                        SimpleDateFormat nFormat = new SimpleDateFormat("yy년 MM월 dd일 HH:mm");
+                                                        String time = nFormat.format(date);
+                                                        String time2 = mFormat.format(date);
+
+
+                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList,"Writer", time, time2);
+                                                        documentReference.set(writeBoardInfo);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                PathCount++;
+                            }
+                            if (successCount == 0)  {
+                                long now = System.currentTimeMillis();
+                                Date date = new Date(now);
+                                SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                                SimpleDateFormat nFormat = new SimpleDateFormat("yy년 MM월 dd일 HH:mm");
+                                String time = nFormat.format(date);
+                                String time2 = mFormat.format(date);
+                                ArrayList<String> sample = new ArrayList();
+                                sample.add("");
+                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "Writer", time, time2);
+                                documentReference.set(writeBoardInfo);
+                            }
 
                             BoardFragment boardFragment = new BoardFragment();
                             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
