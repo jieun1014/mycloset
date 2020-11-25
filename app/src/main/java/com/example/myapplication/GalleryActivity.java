@@ -1,8 +1,8 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
+
 
 import com.example.myapplication.adapter.GalleryAdapter;
 
@@ -25,6 +25,9 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         recyclerView = findViewById(R.id.recyclerView);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         final int numberOfColumns = 3;
 

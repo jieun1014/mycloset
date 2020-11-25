@@ -1,5 +1,6 @@
 package com.example.myapplication.BoardFragments;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,11 +39,11 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
     private ArrayList<ReadBoardInfo> arrayList;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    String[] items = {"전체", "코디 질문", "코디 자랑"};
-    String str;
-    SearchView searchView;
-    FloatingActionButton WriteBtn;
-    Spinner spinner;
+    private String[] items = {"전체", "코디 질문", "코디 자랑"};
+    private String str;
+    private SearchView searchView;
+    private FloatingActionButton WriteBtn;
+    private Spinner spinner;
 
     MainActivity activity;
 

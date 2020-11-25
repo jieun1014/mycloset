@@ -3,10 +3,12 @@ package com.example.myapplication.info;
 public class CommentReadInfo {
     private String CommentWriter;
     private String CommentContent;
+    private String Cid;
 
-    public CommentReadInfo(String CommentWriter, String CommentContent) {
+    public CommentReadInfo(String CommentWriter, String CommentContent, String Cid) {
         this.CommentWriter = CommentWriter;
         this.CommentContent = CommentContent;
+        this.Cid = Cid;
     }
 
     public String getCommentWriter() {
@@ -23,5 +25,13 @@ public class CommentReadInfo {
 
     public void setCommentContent(String commentContent) {
         CommentContent = commentContent;
+    }
+
+    public String getCid() {
+        return Cid;
+    }
+
+    public void setCid(String cid) {
+        Cid = cid;
     }
 }

@@ -40,7 +40,7 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
     public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
         holder.CommentWriter.setText(arrayList.get(position).getCommentWriter());
         holder.CommentContent.setText(arrayList.get(position).getCommentContent());
-
+        holder.Cid.setText(arrayList.get(position).getCid());
     }
 
     @Override
@@ -51,12 +51,13 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public TextView CommentWriter;
         public TextView CommentContent;
+        public TextView Cid;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             this.CommentWriter =itemView.findViewById(R.id.CommentWriter);
             this.CommentContent =itemView.findViewById(R.id.CommentContent);
-
+            this.Cid = itemView.findViewById(R.id.CidTextView);
         }
 
     }

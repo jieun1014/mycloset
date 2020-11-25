@@ -49,8 +49,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_action_add"
-        android:tint="#000000"
+        android:src="@drawable/boardicon"
         app:backgroundTint="#FFFFFF"
         app:fabSize="normal"
         app:rippleColor="#000000" />

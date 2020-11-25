@@ -5,12 +5,14 @@ public class CommentWriteInfo {
     private String CommentContent;
     private String Did;
     private String Time;
+    private String Cid;
 
-    public CommentWriteInfo(String CommentWriter, String CommentContent, String Did, String Time) {
+    public CommentWriteInfo(String CommentWriter, String CommentContent, String Did, String Time, String Cid) {
         this.CommentWriter = CommentWriter;
         this.CommentContent = CommentContent;
         this.Did = Did;
         this.Time = Time;
+        this.Cid = Cid;
     }
 
     public String getCommentWriter() {
@@ -43,5 +45,13 @@ public class CommentWriteInfo {
 
     public void setTime(String time) {
         Time = time;
+    }
+
+    public String getCid() {
+        return Cid;
+    }
+
+    public void setCid(String cid) {
+        Cid = cid;
     }
 }

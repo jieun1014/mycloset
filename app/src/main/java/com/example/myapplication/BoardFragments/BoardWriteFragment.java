@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class BoardWriteFragment extends Fragment {
-    MainActivity activity;
+    private MainActivity activity;
     private Context context;
     private ImageView imageView;
     private Button SubmitBtn, SelectPicBtn;
@@ -142,7 +142,7 @@ public class BoardWriteFragment extends Fragment {
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     ImageView imageView = new ImageView(getContext());
                     imageView.setLayoutParams(layoutParams);
-                    Glide.with(activity).load(profilePath).override(800).into(imageView);
+                    Glide.with(activity).load(profilePath).override(1000).into(imageView);
                     parent.addView(imageView);
                 }
                 break;
@@ -173,8 +173,6 @@ public class BoardWriteFragment extends Fragment {
                             StorageReference storageRef = storage.getReference();
                             DocumentReference documentReference = db.collection("Boards").document();
 
-
-
                             for (int i = 0; i < parent.getChildCount(); i++){
                                 System.out.println("여기" + pathList + ", " + PathCount);
 
@@ -204,12 +202,11 @@ public class BoardWriteFragment extends Fragment {
                                                         long now = System.currentTimeMillis();
                                                         Date date = new Date(now);
                                                         SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                                                        SimpleDateFormat nFormat = new SimpleDateFormat("yy년 MM월 dd일 HH:mm");
+                                                        SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
                                                         String time = nFormat.format(date);
                                                         String time2 = mFormat.format(date);
 
-
-                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList,"Writer", time, time2);
+                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList,"익명", time, time2);
                                                         documentReference.set(writeBoardInfo);
                                                     }
                                                 }
@@ -226,12 +223,12 @@ public class BoardWriteFragment extends Fragment {
                                 long now = System.currentTimeMillis();
                                 Date date = new Date(now);
                                 SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                                SimpleDateFormat nFormat = new SimpleDateFormat("yy년 MM월 dd일 HH:mm");
+                                SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
                                 String time = nFormat.format(date);
                                 String time2 = mFormat.format(date);
                                 ArrayList<String> sample = new ArrayList();
                                 sample.add("");
-                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "Writer", time, time2);
+                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "익명", time, time2);
                                 documentReference.set(writeBoardInfo);
                             }
 
