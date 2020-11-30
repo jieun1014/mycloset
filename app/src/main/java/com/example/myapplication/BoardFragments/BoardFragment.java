@@ -1,6 +1,5 @@
 package com.example.myapplication.BoardFragments;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -252,7 +251,6 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         System.out.println(Did);
 
         BoardReadFragment boardReadFragment = new BoardReadFragment();
-        BoardFragment boardFragment = new BoardFragment();
         Bundle bundle = new Bundle();
         bundle.putString("Did", Did);
         boardReadFragment.setArguments(bundle);

@@ -53,16 +53,25 @@ import java.util.Date;
 
 public class BoardWriteFragment extends Fragment {
     private MainActivity activity;
+    private LinearLayout parent;
     private Context context;
     private ImageView imageView;
     private Button SubmitBtn, SelectPicBtn;
     private EditText TitleEditText, ContentsEditText;
     private RadioButton QuestionRdb, BoastRdb;
+
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
+    SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
+
     private String Title, Contents, Category;
     private int PathCount, successCount, ImageId;
-    private LinearLayout parent;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private ArrayList<String> pathList = new ArrayList<>();
     private ArrayList<String> contentsList = new ArrayList<>();
+    private ArrayList<String> test = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
@@ -144,18 +153,24 @@ public class BoardWriteFragment extends Fragment {
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     ImageView imageView = new ImageView(getContext());
                     imageView.setLayoutParams(layoutParams);
-                    //imageView.setId(ImageId);
                     Glide.with(activity).load(profilePath).override(1000).into(imageView);
                     parent.addView(imageView);
-                    //ImageId++;
-                    /*imageView.setOnClickListener(new View.OnClickListener() {
+
+                    imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startToast("사진 클릭: " + imageView.getId());
+                            startToast("사진을 길게 누르면 삭제됩니다.");
+                        }
+                    });
+
+                    imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
                             parent.removeView(imageView);
                             pathList.remove(profilePath);
+                            return true;
                         }
-                    });*/
+                    });
                 }
                 break;
         }
@@ -180,16 +195,10 @@ public class BoardWriteFragment extends Fragment {
             builder.setPositiveButton("예",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
                             StorageReference storageRef = storage.getReference();
                             DocumentReference documentReference = db.collection("Boards").document();
 
                             for (int i = 0; i < parent.getChildCount(); i++){
-                                System.out.println("여기" + pathList + ", " + PathCount);
-
-                                System.out.println(documentReference.getId());
                                 contentsList.add(pathList.get(PathCount));
                                 final StorageReference mountainImageRef = storageRef.child("BoardImages/" + documentReference.getId() + "/" + PathCount + ".jpg");
                                 try {
@@ -214,8 +223,7 @@ public class BoardWriteFragment extends Fragment {
                                                         //완료
                                                         long now = System.currentTimeMillis();
                                                         Date date = new Date(now);
-                                                        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                                                        SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
+
                                                         String time = nFormat.format(date);
                                                         String time2 = mFormat.format(date);
 
@@ -235,8 +243,7 @@ public class BoardWriteFragment extends Fragment {
                             if (successCount == 0)  {
                                 long now = System.currentTimeMillis();
                                 Date date = new Date(now);
-                                SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                                SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
+
                                 String time = nFormat.format(date);
                                 String time2 = mFormat.format(date);
                                 ArrayList<String> sample = new ArrayList();

@@ -112,7 +112,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (user.getUid() == Uid) {
+                        if (user.getUid().equals(Uid)) {
                             if (item.getTitle().equals("삭제")) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("게시글 삭제");
@@ -140,10 +140,10 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                                         });
                                 builder.show();
                             } else {
-                                Toast.makeText(getContext(), "팝업메뉴 이벤트 처리 - " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                                startToast("수정");
                             }
                         } else  {
-                            Toast.makeText(getContext(), "작성자가 아닙니다.", Toast.LENGTH_SHORT).show();
+                            startToast("작성자가 아닙니다.");
                         }
                         return false;
                     }
@@ -177,14 +177,12 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                             switch (dc.getType()) {
                                 case ADDED:
                                     if (flag) {
-                                        Log.d(TAG, "New city: " + dc.getDocument().getData());
                                         ReadComment();
                                         arrayList.clear();
                                         break;
                                     }
                                 case REMOVED:
                                     if (flag) {
-                                        Log.d(TAG, "Removed city: " + dc.getDocument().getData());
                                         ReadComment();
                                         arrayList.clear();
                                         break;
@@ -331,7 +329,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                     });
             builder.show();
         }   else {
-            Toast.makeText(getContext(), "작성자가 아닙니다.", Toast.LENGTH_SHORT).show();
+            startToast("작성자가 아닙니다.");
         }
 
 
