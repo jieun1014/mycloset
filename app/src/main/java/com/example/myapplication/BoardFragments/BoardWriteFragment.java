@@ -34,6 +34,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,7 +59,7 @@ public class BoardWriteFragment extends Fragment {
     private EditText TitleEditText, ContentsEditText;
     private RadioButton QuestionRdb, BoastRdb;
     private String Title, Contents, Category;
-    private int PathCount, successCount;
+    private int PathCount, successCount, ImageId;
     private LinearLayout parent;
     private ArrayList<String> pathList = new ArrayList<>();
     private ArrayList<String> contentsList = new ArrayList<>();
@@ -142,8 +144,18 @@ public class BoardWriteFragment extends Fragment {
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     ImageView imageView = new ImageView(getContext());
                     imageView.setLayoutParams(layoutParams);
+                    //imageView.setId(ImageId);
                     Glide.with(activity).load(profilePath).override(1000).into(imageView);
                     parent.addView(imageView);
+                    //ImageId++;
+                    /*imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startToast("사진 클릭: " + imageView.getId());
+                            parent.removeView(imageView);
+                            pathList.remove(profilePath);
+                        }
+                    });*/
                 }
                 break;
         }
@@ -169,6 +181,7 @@ public class BoardWriteFragment extends Fragment {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             FirebaseStorage storage = FirebaseStorage.getInstance();
                             StorageReference storageRef = storage.getReference();
                             DocumentReference documentReference = db.collection("Boards").document();
@@ -206,7 +219,7 @@ public class BoardWriteFragment extends Fragment {
                                                         String time = nFormat.format(date);
                                                         String time2 = mFormat.format(date);
 
-                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList,"익명", time, time2);
+                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList,"익명", time, time2, user.getUid());
                                                         documentReference.set(writeBoardInfo);
                                                     }
                                                 }
@@ -228,7 +241,7 @@ public class BoardWriteFragment extends Fragment {
                                 String time2 = mFormat.format(date);
                                 ArrayList<String> sample = new ArrayList();
                                 sample.add("");
-                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "익명", time, time2);
+                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "익명", time, time2, user.getUid());
                                 documentReference.set(writeBoardInfo);
                             }
 

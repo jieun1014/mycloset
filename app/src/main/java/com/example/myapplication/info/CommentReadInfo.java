@@ -4,11 +4,13 @@ public class CommentReadInfo {
     private String CommentWriter;
     private String CommentContent;
     private String Cid;
+    private String Uid;
 
-    public CommentReadInfo(String CommentWriter, String CommentContent, String Cid) {
+    public CommentReadInfo(String CommentWriter, String CommentContent, String Cid, String Uid) {
         this.CommentWriter = CommentWriter;
         this.CommentContent = CommentContent;
         this.Cid = Cid;
+        this.Uid = Uid;
     }
 
     public String getCommentWriter() {
@@ -33,5 +35,13 @@ public class CommentReadInfo {
 
     public void setCid(String cid) {
         Cid = cid;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
     }
 }

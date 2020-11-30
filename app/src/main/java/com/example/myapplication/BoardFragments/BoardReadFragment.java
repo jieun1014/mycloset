@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +35,8 @@ import com.example.myapplication.R;
 import com.example.myapplication.adapter.CommentLoadAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,6 +46,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,13 +64,15 @@ public class BoardReadFragment extends Fragment  {
     private ArrayList<CommentReadInfo> arrayList;
     private LinearLayout parent;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean flag=false;
     private MainActivity activity;
     private TextView Category, Title, Content, Writer, WriteDate;
     private EditText CommentEditText;
     private Button CommentSubmitBtn;
-    private String Did;
+    private String Did, Uid;
     private ImageView MenuBtn;
+    private String[] ImageURL;
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -106,30 +110,41 @@ public class BoardReadFragment extends Fragment  {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("삭제"))   {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("게시글 삭제");
-                            builder.setMessage("게시글을 삭제하시겠습니까?");
-                            builder.setPositiveButton("예",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                            db.collection("Boards").document(Did).delete();
-                                            BoardFragment boardFragment = new BoardFragment();
-                                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                            transaction.replace(R.id.mainLayout, boardFragment);
-                                            transaction.commit();
-                                        }
-                                    });
-                            builder.setNegativeButton("아니오",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                            builder.show();
+                        if (user.getUid() == Uid) {
+                            if (item.getTitle().equals("삭제")) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("게시글 삭제");
+                                builder.setMessage("게시글을 삭제하시겠습니까?");
+                                builder.setPositiveButton("예",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                                                db.collection("Boards").document(Did).delete();
+                                                for (int i = 0; i < ImageURL.length; i++) {
+                                                    StorageReference DidDeleteRef = storage.getReference("BoardImages/" + Did + "/" + i + ".jpg");
+                                                    DidDeleteRef.delete();
+                                                }
+
+                                                BoardFragment boardFragment = new BoardFragment();
+                                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                                transaction.replace(R.id.mainLayout, boardFragment);
+                                                transaction.commit();
+                                            }
+                                        });
+                                builder.setNegativeButton("아니오",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                builder.show();
+                            } else {
+                                Toast.makeText(getContext(), "팝업메뉴 이벤트 처리 - " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            }
                         } else  {
-                            Toast.makeText(getContext(), "팝업메뉴 이벤트 처리 - " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "작성자가 아닙니다.", Toast.LENGTH_SHORT).show();
                         }
                         return false;
                     }
@@ -201,13 +216,12 @@ public class BoardReadFragment extends Fragment  {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         ArrayList<String> ImageUri = new ArrayList<>();
-                        String ab = (document.getData().get("images").toString());
-                        String[] cd = ab.split(",");
-                        ArrayList<String> ef = new ArrayList<>(Arrays.asList(cd));
+                        String getURL = (document.getData().get("images").toString());
+                        ImageURL = getURL.split(",");
+                        ArrayList<String> ImageUrl = new ArrayList<>(Arrays.asList(ImageURL));
 
-
-                        for (int i=0; i < cd.length; i++) {
-                            String ck = ef.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
+                        for (int i = 0; i < ImageURL.length; i++) {
+                            String ck = ImageUrl.get(i).replaceAll("\\[", "").replaceAll("\\]", "").replaceAll(" ", "");
 
                             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             ImageView imageView = new ImageView(getContext());
@@ -216,12 +230,12 @@ public class BoardReadFragment extends Fragment  {
                             parent.addView(imageView);
                         }
 
-
                         Category.setText(document.getData().get("category").toString());
                         Title.setText(document.getData().get("title").toString());
                         Content.setText(document.getData().get("contents").toString());
                         Writer.setText(document.getData().get("writer").toString());
                         WriteDate.setText(document.getData().get("writeDate").toString());
+                        Uid = document.getData().get("uid").toString();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -246,7 +260,8 @@ public class BoardReadFragment extends Fragment  {
                                     arrayList.add(new CommentReadInfo(
                                             document.getData().get("commentWriter").toString(),
                                             document.getData().get("commentContent").toString(),
-                                            document.getData().get("cid").toString()));
+                                            document.getData().get("cid").toString(),
+                                            document.getData().get("uid").toString()));
                                 }
                             }
                             adapter.notifyDataSetChanged();
@@ -279,7 +294,7 @@ public class BoardReadFragment extends Fragment  {
                             SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
                             String time = mFormat.format(date);
 
-                            CommentWriteInfo commentWriteInfo = new CommentWriteInfo("익명", Content, Did, time, documentReference.getId());
+                            CommentWriteInfo commentWriteInfo = new CommentWriteInfo("익명", Content, Did, time, documentReference.getId(), user.getUid());
                             documentReference.set(commentWriteInfo);
                             CommentEditText.setText(null);
                         }

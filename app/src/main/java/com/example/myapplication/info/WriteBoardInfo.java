@@ -10,8 +10,9 @@ public class WriteBoardInfo {
     private String Writer;
     private String WriteDate;
     private String time;
+    private String UId;
 
-    public WriteBoardInfo(String Category, String Title, String Contents, ArrayList<String> Images,String Writer, String WriteDate, String time) {
+    public WriteBoardInfo(String Category, String Title, String Contents, ArrayList<String> Images,String Writer, String WriteDate, String time, String UId) {
         this.Category = Category;
         this.Title = Title;
         this.Contents = Contents;
@@ -19,6 +20,7 @@ public class WriteBoardInfo {
         this.Writer = Writer;
         this.WriteDate = WriteDate;
         this.time = time;
+        this.UId = UId;
     }
 
     public String getCategory() {
@@ -75,5 +77,13 @@ public class WriteBoardInfo {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getUId() {
+        return UId;
+    }
+
+    public void setUId(String UId) {
+        this.UId = UId;
     }
 }

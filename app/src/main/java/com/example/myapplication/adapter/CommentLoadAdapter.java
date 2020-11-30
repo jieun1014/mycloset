@@ -41,6 +41,7 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
         holder.CommentWriter.setText(arrayList.get(position).getCommentWriter());
         holder.CommentContent.setText(arrayList.get(position).getCommentContent());
         holder.Cid.setText(arrayList.get(position).getCid());
+        holder.Uid.setText(arrayList.get(position).getUid());
     }
 
     @Override
@@ -52,12 +53,14 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
         public TextView CommentWriter;
         public TextView CommentContent;
         public TextView Cid;
+        public TextView Uid;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             this.CommentWriter =itemView.findViewById(R.id.CommentWriter);
             this.CommentContent =itemView.findViewById(R.id.CommentContent);
             this.Cid = itemView.findViewById(R.id.CidTextView);
+            this.Uid = itemView.findViewById(R.id.UidTextView);
         }
 
     }
