@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.adapter.BoardLoadAdapter;
 import com.example.myapplication.info.CommentReadInfo;
 import com.example.myapplication.info.CommentWriteInfo;
 import com.example.myapplication.MainActivity;
@@ -56,7 +57,7 @@ import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
-public class BoardReadFragment extends Fragment  {
+public class BoardReadFragment extends Fragment implements CommentLoadAdapter.OnListItemSelectedInterface{
     private Context context;
     private RecyclerView recyclerView2;
     private RecyclerView.Adapter adapter;
@@ -65,6 +66,7 @@ public class BoardReadFragment extends Fragment  {
     private LinearLayout parent;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private boolean flag=false;
     private MainActivity activity;
     private TextView Category, Title, Content, Writer, WriteDate;
@@ -118,9 +120,6 @@ public class BoardReadFragment extends Fragment  {
                                 builder.setPositiveButton("예",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                FirebaseStorage storage = FirebaseStorage.getInstance();
-
                                                 db.collection("Boards").document(Did).delete();
                                                 for (int i = 0; i < ImageURL.length; i++) {
                                                     StorageReference DidDeleteRef = storage.getReference("BoardImages/" + Did + "/" + i + ".jpg");
@@ -270,7 +269,7 @@ public class BoardReadFragment extends Fragment  {
                         }
                     }
                 });
-        adapter = new CommentLoadAdapter(arrayList, getContext());
+        adapter = new CommentLoadAdapter(arrayList, getContext(), this);
         recyclerView2.setAdapter(adapter);
     }
 
@@ -286,7 +285,6 @@ public class BoardReadFragment extends Fragment  {
             builder.setPositiveButton("예",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
                             DocumentReference documentReference = db.collection("BoardComment").document();
 
                             long now = System.currentTimeMillis();
@@ -307,6 +305,36 @@ public class BoardReadFragment extends Fragment  {
                     });
             builder.show();
         }
+    }
+
+    @Override
+    public void onItemSelected(View v, int position) {
+        CommentLoadAdapter.CustomViewHolder viewHolder = (CommentLoadAdapter.CustomViewHolder)recyclerView2.findViewHolderForAdapterPosition(position);
+        String Cid = (viewHolder.Cid).getText().toString();
+        String Uid = (viewHolder.Uid).getText().toString();
+
+        if (Uid.equals(user.getUid())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("댓글 삭제");
+            builder.setMessage("댓글을 삭제하시겠습니까?");
+            builder.setPositiveButton("예",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            db.collection("BoardComment").document(Cid).delete();
+                        }
+                    });
+            builder.setNegativeButton("아니오",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            builder.show();
+        }   else {
+            Toast.makeText(getContext(), "작성자가 아닙니다.", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void startToast(String msg) {

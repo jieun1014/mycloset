@@ -22,9 +22,15 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
     private int pos;
     MainActivity activity;
 
-    public CommentLoadAdapter(ArrayList<CommentReadInfo> arrayList, Context context) {
+    private OnListItemSelectedInterface nListener;
+    public interface OnListItemSelectedInterface {
+        void onItemSelected(View v, int position);
+    }
+
+    public CommentLoadAdapter(ArrayList<CommentReadInfo> arrayList, Context context, OnListItemSelectedInterface listener) {
         this.arrayList = arrayList;
         this.context = context;
+        this.nListener = listener;
     }
 
     @NonNull
@@ -54,6 +60,7 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
         public TextView CommentContent;
         public TextView Cid;
         public TextView Uid;
+        public TextView DeleteBtn;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +68,14 @@ public class CommentLoadAdapter extends RecyclerView.Adapter<CommentLoadAdapter.
             this.CommentContent =itemView.findViewById(R.id.CommentContent);
             this.Cid = itemView.findViewById(R.id.CidTextView);
             this.Uid = itemView.findViewById(R.id.UidTextView);
+            this.DeleteBtn = itemView.findViewById(R.id.DeleteBtn);
+
+            DeleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nListener.onItemSelected(v, getAdapterPosition());
+                }
+            });
         }
 
     }
