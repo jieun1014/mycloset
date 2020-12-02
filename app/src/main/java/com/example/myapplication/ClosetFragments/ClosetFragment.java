@@ -9,22 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class ClosetFragment extends Fragment {
 
     MainActivity activity;
-    GridView gridView;
-    ClothAdapter clothAdapter;
+    private GridView gridView;
+    private ClothAdapter clothAdapter;
 
+    private FloatingActionButton btnClosetWrite;
+    private SearchView searchView;
 
     @Override
     public void onAttach(Context context) {
@@ -65,6 +70,19 @@ public class ClosetFragment extends Fragment {
         clothAdapter.addItem(new ClothItem(R.drawable.shoes1));
 
         gridView.setAdapter(clothAdapter);
+
+        btnClosetWrite = (FloatingActionButton) root.findViewById(R.id.btnClosetWrite);
+        btnClosetWrite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClothWriteFragment clothWriteFragment = new ClothWriteFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.mainLayout, clothWriteFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
 //
 //        Button b1 = (Button)root.findViewById(R.id.button);
 //        b1.setOnClickListener(new View.OnClickListener() {
