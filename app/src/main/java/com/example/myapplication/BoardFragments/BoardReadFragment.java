@@ -64,16 +64,17 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<CommentReadInfo> arrayList;
     private LinearLayout parent;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private final FirebaseStorage storage = FirebaseStorage.getInstance();
-    private boolean flag=false;
     private MainActivity activity;
     private TextView Category, Title, Content, Writer, WriteDate;
     private EditText CommentEditText;
     private Button CommentSubmitBtn;
-    private String Did, Uid;
     private ImageView MenuBtn;
+
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    private String Did, Uid;
     private String[] ImageURL;
 
     public void onAttach(Context context) {
@@ -86,7 +87,6 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         super.onDetach();
         activity = null;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +103,18 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         CommentEditText = (EditText) root.findViewById(R.id.CommentEditText);
         CommentSubmitBtn = (Button) root.findViewById(R.id.CommentSubmitBtn);
         MenuBtn = (ImageView) root.findViewById(R.id.MenuBtn);
+
+        recyclerView2 = root.findViewById(R.id.recyclerView2);
+        recyclerView2.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView2.setLayoutManager(layoutManager);
+        arrayList = new ArrayList<>();
+
+        if (getArguments() != null) {
+            Did = getArguments().getString("Did");
+            ReadBoard();
+        }
+        ReadComment();
 
         MenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +152,14 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                                         });
                                 builder.show();
                             } else {
-                                startToast("수정");
+                                BoardModifyFragment boardModifyFragment = new BoardModifyFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Did", Did);
+                                boardModifyFragment.setArguments(bundle);
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.mainLayout, boardModifyFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
                             }
                         } else  {
                             startToast("작성자가 아닙니다.");
@@ -151,47 +170,6 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                 popupMenu.show();
             }
         });
-
-        if (getArguments() != null) {
-            Did = getArguments().getString("Did");
-            ReadBoard();
-        }
-
-        recyclerView2 = root.findViewById(R.id.recyclerView2);
-        recyclerView2.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView2.setLayoutManager(layoutManager);
-        arrayList = new ArrayList<>();
-        ReadComment();
-
-        db.collection("BoardComment").whereEqualTo("did", Did)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "listen:error", e);
-                            return;
-                        }
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    if (flag) {
-                                        ReadComment();
-                                        arrayList.clear();
-                                        break;
-                                    }
-                                case REMOVED:
-                                    if (flag) {
-                                        ReadComment();
-                                        arrayList.clear();
-                                        break;
-                                    }
-                            }
-                        }
-                        flag = true;
-                    }
-                });
 
         CommentSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +190,6 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        ArrayList<String> ImageUri = new ArrayList<>();
                         String getURL = (document.getData().get("images").toString());
                         ImageURL = getURL.split(",");
                         ArrayList<String> ImageUrl = new ArrayList<>(Arrays.asList(ImageURL));
@@ -241,7 +218,6 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                 }
             }
         });
-
     }
 
     private void ReadComment() {
@@ -293,6 +269,9 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                             CommentWriteInfo commentWriteInfo = new CommentWriteInfo("익명", Content, Did, time, documentReference.getId(), user.getUid());
                             documentReference.set(commentWriteInfo);
                             CommentEditText.setText(null);
+
+                            arrayList.clear();
+                            ReadComment();
                         }
                     });
             builder.setNegativeButton("아니오",
@@ -319,6 +298,9 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             db.collection("BoardComment").document(Cid).delete();
+
+                            arrayList.clear();
+                            ReadComment();
                         }
                     });
             builder.setNegativeButton("아니오",
@@ -331,8 +313,6 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         }   else {
             startToast("작성자가 아닙니다.");
         }
-
-
     }
 
     private void startToast(String msg) {

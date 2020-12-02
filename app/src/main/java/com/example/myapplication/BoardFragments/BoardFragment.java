@@ -30,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListItemSelectedInterface{
+public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListItemSelectedInterface {
     private Context context;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -68,7 +68,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
 
-        WriteBtn = (FloatingActionButton)root.findViewById(R.id.WriteBtn);
+        WriteBtn = (FloatingActionButton) root.findViewById(R.id.WriteBtn);
         WriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,9 +80,9 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
             }
         });
 
-        spinner = (Spinner)root.findViewById(R.id.spinner);
+        spinner = (Spinner) root.findViewById(R.id.spinner);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-          getActivity(), android.R.layout.simple_spinner_item, items
+                getActivity(), android.R.layout.simple_spinner_item, items
         );
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
@@ -96,7 +96,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
                 } else if (str.equals("코디 질문")) {
                     ReadBoardCategory("[코디 질문]");
                     arrayList.clear();
-                } else  {
+                } else {
                     ReadBoardCategory("[코디 자랑]");
                     arrayList.clear();
                 }
@@ -108,7 +108,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
             }
         });
 
-        searchView = (SearchView)root.findViewById(R.id.searchView);
+        searchView = (SearchView) root.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -118,7 +118,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
                 } else if (str.equals("코디 질문")) {
                     SearchBoardCategory("[코디 질문]", query);
                     arrayList.clear();
-                } else  {
+                } else {
                     SearchBoardCategory("[코디 자랑]", query);
                     arrayList.clear();
                 }
@@ -246,7 +246,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
 
     @Override
     public void onItemSelected(View v, int position) {
-        BoardLoadAdapter.CustomViewHolder viewHolder = (BoardLoadAdapter.CustomViewHolder)recyclerView.findViewHolderForAdapterPosition(position);
+        BoardLoadAdapter.CustomViewHolder viewHolder = (BoardLoadAdapter.CustomViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         String Did = (viewHolder.Did).getText().toString();
         System.out.println(Did);
 
