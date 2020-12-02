@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,6 +36,8 @@ import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.CommentLoadAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,6 +50,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -62,7 +66,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
     private RecyclerView recyclerView2;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<CommentReadInfo> arrayList;
+
     private LinearLayout parent;
     private MainActivity activity;
     private TextView Category, Title, Content, Writer, WriteDate;
@@ -74,8 +78,11 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    private ArrayList<CommentReadInfo> arrayList;
+    private ArrayList<String> cidList;
     private String Did, Uid;
     private String[] ImageURL;
+    private int Count;
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -109,6 +116,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView2.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();
+        cidList = new ArrayList<>();
 
         if (getArguments() != null) {
             Did = getArguments().getString("Did");
@@ -133,10 +141,31 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 db.collection("Boards").document(Did).delete();
+
+                                                db.collection("BoardComment").whereEqualTo("did", Did)
+                                                        .get()
+                                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                for (DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()) {
+                                                                    String cid = ds.get("cid").toString();
+                                                                    cidList.add(cid);
+                                                                }
+                                                            }
+                                                        });
+
                                                 for (int i = 0; i < ImageURL.length; i++) {
                                                     StorageReference DidDeleteRef = storage.getReference("BoardImages/" + Did + "/" + i + ".jpg");
                                                     DidDeleteRef.delete();
                                                 }
+
+                                                Handler mHandler = new Handler();
+                                                mHandler.postDelayed(new Runnable()  {
+                                                    public void run() {
+                                                        for (int i = 0; i < cidList.size(); i++)
+                                                            db.collection("BoardComment").document(cidList.get(i)).delete();
+                                                    }
+                                                }, 3000);
 
                                                 BoardFragment boardFragment = new BoardFragment();
                                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

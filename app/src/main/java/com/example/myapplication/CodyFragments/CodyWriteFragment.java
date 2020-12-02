@@ -77,7 +77,7 @@ public class CodyWriteFragment extends Fragment {
 
         imageView = (ImageView)root.findViewById(R.id.imageHat);
         imageView1 = (ImageView)root.findViewById(R.id.imageTop);
-        submit = (Button)root.findViewById(R.id.submitBtn);
+        submit = (Button)root.findViewById(R.id.submitbtn);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
