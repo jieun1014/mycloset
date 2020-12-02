@@ -8,13 +8,10 @@
     android:orientation="vertical"
     tools:context=".CodyFragments.CodyFragment">
 
-
-
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_round" />
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/codyRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/WriteBtn"
