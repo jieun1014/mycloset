@@ -35,13 +35,6 @@
                 android:layout_height="80dp"
                 android:src="@drawable/codycap" />
 
-            <Button
-                android:id="@+id/buttonHat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-
         </LinearLayout>
 
         <LinearLayout
