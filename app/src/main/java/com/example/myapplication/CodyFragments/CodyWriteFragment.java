@@ -2,6 +2,7 @@ package com.example.myapplication.CodyFragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,22 +35,27 @@ import com.example.myapplication.BoardFragments.BoardFragment;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.info.WriteBoardInfo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.app.Activity.RESULT_OK;
 
 public class CodyWriteFragment extends Fragment {
-    private static final int RESULT_OK = 0;
-    int REQUEST_EXTERNAL_STORAGE_PERMISSION = 1002;
+    private static final String TAG = "MainActivity";
+    private Uri filePath, filePath1;
     MainActivity activity;
-    ImageView imageView, imageView1, imageView2, imageView3;
-
-
-
+    ImageView imageView, imageView1;
+    Button submit;
 
     @Override
     public void onAttach(Context context) {
@@ -65,128 +72,145 @@ public class CodyWriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View root =  inflater.inflate(R.layout.fragment_cody_write, container, false);
-
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_EXTERNAL_STORAGE_PERMISSION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        } else {
-            // Permission has already been granted
-        }
-
-
 
         imageView = (ImageView)root.findViewById(R.id.imageHat);
         imageView1 = (ImageView)root.findViewById(R.id.imageTop);
-        imageView2 = (ImageView)root.findViewById(R.id.imageBot);
-        imageView3 = (ImageView)root.findViewById(R.id.imageShoe);
+        submit = (Button)root.findViewById(R.id.submitBtn);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 1);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 0);
             }
         });
 
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 2);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 1);
             }
         });
 
-        imageView2.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 3);
+                upload();
             }
         });
-
-        imageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 4);
-            }
-        });
-
-
         return root;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        switch (requestCode) {
-            case (1): {
-                if (requestCode == 1) {
-                    // Make sure the request was successful
-                    Uri image = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                        imageView.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0 && resultCode == RESULT_OK){
+            filePath = data.getData();
+            Log.d(TAG, "uri:" + String.valueOf(filePath));
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            case (2): {
-                if (requestCode == 2) {
-                    // Make sure the request was successful
-                    Uri image = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                        imageView1.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+        }
+        else if(requestCode == 1 && resultCode == RESULT_OK){
+            filePath1 = data.getData();
+            Log.d(TAG, "uri:" + String.valueOf(filePath1));
+            try {
+                Bitmap bitmap1 = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath1);
+                imageView1.setImageBitmap(bitmap1);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            case (3): {
-                if (requestCode == 3) {
-                    // Make sure the request was successful
-                    Uri image = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                        imageView2.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        }
+    }
+
+    private void upload(){
+        if(filePath != null){
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setTitle("업로드중");
+            progressDialog.show();
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
+            Date now = new Date();
+            String filename = formatter.format(now) + "0.jpg";
+            StorageReference storageRef =storage.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
+
+            storageRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(activity.getApplicationContext(),"업로드 완료",Toast.LENGTH_SHORT).show();
+
                 }
-            }
-            case (4): {
-                if (requestCode == 4) {
-                    // Make sure the request was successful
-                    Uri image = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                        imageView3.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(activity.getApplicationContext(), "업로드 실패",Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                        }
+                    });
+        }
+
+        if(filePath1 != null){
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setTitle("업로드중");
+            progressDialog.show();
+
+            FirebaseStorage storage1 = FirebaseStorage.getInstance();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
+            Date now = new Date();
+            String filename = formatter.format(now) + "1.jpg";
+            StorageReference storageRef =storage1.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
+
+            storageRef.putFile(filePath1).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(activity.getApplicationContext(),"업로드 완료",Toast.LENGTH_SHORT).show();
+
                 }
-            }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(activity.getApplicationContext(), "업로드 실패",Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                        }
+                    });
+        }
+
+        else {
+            Toast.makeText(activity.getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
         }
     }
 

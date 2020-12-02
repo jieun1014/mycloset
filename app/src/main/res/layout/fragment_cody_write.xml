@@ -12,26 +12,35 @@
         android:gravity="center_horizontal">
 
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/Text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="코디 이름"
             android:textSize="30sp" />
 
         <EditText
+            android:id="@+id/NameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="코디 이름을 입력하세요" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageHat"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/codycap"/>
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/codycap" />
+
+            <Button
+                android:id="@+id/buttonHat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
 
         </LinearLayout>
 
@@ -41,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/imageTop"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/codytop"/>
 
         </LinearLayout>
@@ -53,8 +62,8 @@
 
             <ImageView
                 android:id="@+id/imageBot"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/codybot"/>
 
         </LinearLayout>
@@ -65,18 +74,20 @@
 
             <ImageView
                 android:id="@+id/imageShoe"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/codyshoe"/>
 
 
         </LinearLayout>
         <EditText
+            android:id="@+id/CodyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="코디 설명" />
 
         <Button
+            android:id="@+id/submitBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="등록" />
