@@ -63,8 +63,4 @@ public class GalleryActivity extends AppCompatActivity {
         return listOfAllImages;
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
 }

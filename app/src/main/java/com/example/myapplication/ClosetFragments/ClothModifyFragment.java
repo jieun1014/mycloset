@@ -126,7 +126,6 @@ public class ClothModifyFragment extends Fragment {
                 } else {
                     Intent intent = new Intent(getActivity(), GalleryActivity.class);
                     startActivityForResult(intent, 0);
-                    ck = 0;
                 }
             }
         });

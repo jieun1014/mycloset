@@ -45,7 +45,7 @@ public class ClothAdapter extends RecyclerView.Adapter<ClothAdapter.CustomViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ClothAdapter.CustomViewHolder holder, final int position) {
-        Glide.with(context).load(arrayList.get(position).getImage()).centerCrop().override(500, 500).into(holder.imageView);
+        Glide.with(context).load(arrayList.get(position).getImage()).centerCrop().override(400).into(holder.imageView);
         holder.Did.setText(arrayList.get(position).getDid());
         holder.Title.setText(arrayList.get(position).getTitle());
     }

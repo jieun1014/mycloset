@@ -118,7 +118,6 @@ public class ClothWriteFragment extends Fragment {
                 } else {
                     Intent intent = new Intent(getActivity(), GalleryActivity.class);
                     startActivityForResult(intent, 0);
-                    ck = 0;
                 }
             }
         });
@@ -161,6 +160,7 @@ public class ClothWriteFragment extends Fragment {
                     Glide.with(activity).load(profilePath).override(900).into(imageView);
                     parent.removeView(clothPicImageView);
                     parent.addView(imageView);
+                    ck = 0;
 
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
