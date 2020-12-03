@@ -110,7 +110,7 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
             @Override
             public boolean onQueryTextSubmit(String query) {
                 arrayList.clear();
-                SearchClothes("tilte", query);
+                SearchClothes("title", query);
                 return true;
             }
 
