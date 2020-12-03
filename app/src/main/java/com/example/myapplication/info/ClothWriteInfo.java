@@ -1,18 +1,20 @@
 package com.example.myapplication.info;
 
-import com.example.myapplication.ClosetFragments.ClothViewer;
-
-public class ClothInfo {
+public class ClothWriteInfo {
     private String Category;
     private String Title;
     private String Contents;
     private String uploadTime;
+    private String Uid;
+    private String Image;
 
-    public ClothInfo(String Category, String Title, String Contents, String uploadTime) {
+    public ClothWriteInfo(String Category, String Title, String Contents, String uploadTime, String Uid, String Image) {
         this.Category = Category;
         this.Title = Title;
         this.Contents = Contents;
         this.uploadTime = uploadTime;
+        this.Uid = Uid;
+        this.Image = Image;
     }
 
     public String getCategory() {
@@ -45,5 +47,21 @@ public class ClothInfo {
 
     public void setUploadTime(String uploadTime) {
         this.uploadTime = uploadTime;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -15,21 +14,43 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.BoardFragments.BoardReadFragment;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.BoardLoadAdapter;
+import com.example.myapplication.adapter.ClothAdapter;
+import com.example.myapplication.info.ClothReadInfo;
+import com.example.myapplication.info.ReadBoardInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
-public class ClosetFragment extends Fragment {
+public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemSelectedInterface{
 
     MainActivity activity;
-    private GridView gridView;
-    private ClothAdapter clothAdapter;
-
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton btnClosetWrite;
     private SearchView searchView;
+
+    private ArrayList<ClothReadInfo> arrayList;
+
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     public void onAttach(Context context) {
@@ -51,27 +72,17 @@ public class ClosetFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_closet, container, false);
 
-        gridView = (GridView)root.findViewById(R.id.closetGridView);
-
-        clothAdapter = new ClothAdapter();
-        clothAdapter.addItem(new ClothItem(R.drawable.bag1));
-        clothAdapter.addItem(new ClothItem(R.drawable.accessory1));
-        clothAdapter.addItem(new ClothItem(R.drawable.bottom1));
-        clothAdapter.addItem(new ClothItem(R.drawable.dress1));
-        clothAdapter.addItem(new ClothItem(R.drawable.outer1));
-        clothAdapter.addItem(new ClothItem(R.drawable.top1));
-        clothAdapter.addItem(new ClothItem(R.drawable.shoes1));
-        clothAdapter.addItem(new ClothItem(R.drawable.bag1));
-        clothAdapter.addItem(new ClothItem(R.drawable.accessory1));
-        clothAdapter.addItem(new ClothItem(R.drawable.bottom1));
-        clothAdapter.addItem(new ClothItem(R.drawable.dress1));
-        clothAdapter.addItem(new ClothItem(R.drawable.outer1));
-        clothAdapter.addItem(new ClothItem(R.drawable.top1));
-        clothAdapter.addItem(new ClothItem(R.drawable.shoes1));
-
-        gridView.setAdapter(clothAdapter);
-
+        recyclerView = root.findViewById(R.id.closetView);
         btnClosetWrite = (FloatingActionButton) root.findViewById(R.id.btnClosetWrite);
+        arrayList = new ArrayList<>();
+
+        final int numberOfColumns = 3;
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+
+        ReadClothes();
+
         btnClosetWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,46 +94,43 @@ public class ClosetFragment extends Fragment {
             }
         });
 
-//
-//        Button b1 = (Button)root.findViewById(R.id.button);
-//        b1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getActivity(), "옷장입니다.", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
         return root;
     }
 
-    class ClothAdapter extends BaseAdapter{
-        ArrayList<ClothItem> items = new ArrayList<>();
+    private void ReadClothes() {
+        db.collection("Clothes")
+                .orderBy("uploadTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("uid").toString().equals(user.getUid())) {
+                                    arrayList.add(new ClothReadInfo(
+                                            document.getData().get("image").toString(),
+                                            document.getId()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
 
-        ImageView imageView;
+                        }
+                    }
+                });
+        adapter = new ClothAdapter(arrayList, getContext(), this);
+        recyclerView.setAdapter(adapter);
+    }
 
-        @Override
-        public int getCount() {
-            return items.size();
-        }
+    @Override
+    public void onItemSelected(View v, int position) {
+        ClothAdapter.CustomViewHolder viewHolder = (ClothAdapter.CustomViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        String Did = (viewHolder.Did).getText().toString();
 
-        public void addItem(ClothItem clothItem){
-            items.add(clothItem);
-        }
-        @Override
-        public Object getItem(int i) {
-            return items.get(i);
-        }
+        startToast(Did);
+    }
 
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View View, ViewGroup viewGroup) {
-            ClothViewer clothViewer = new ClothViewer(activity.getApplicationContext());
-            clothViewer.setItem(items.get(i));
-            return clothViewer;
-        }
+    private void startToast(String msg) {
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 }

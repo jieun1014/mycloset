@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     android:orientation="vertical"
     tools:context=".ClosetFragments.ClosetFragment">
 
@@ -41,13 +42,14 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btnWhole"
                     android:layout_width="wrap_content"
@@ -56,6 +58,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="전체" />
+
                 <Button
                     android:id="@+id/btnOuter"
                     android:layout_width="wrap_content"
@@ -125,18 +128,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <GridView
-            android:id="@+id/closetGridView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/closetView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:gravity="center"
-            android:numColumns="3"
-            android:horizontalSpacing="10dp"
-            android:verticalSpacing="10dp"
-            >
+            android:layout_height="match_parent">
 
-        </GridView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 
@@ -147,7 +144,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/codyicon"
         android:tint="#000000"
         app:backgroundTint="#FFFFFF"
