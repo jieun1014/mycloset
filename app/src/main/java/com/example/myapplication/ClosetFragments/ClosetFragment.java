@@ -109,7 +109,8 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
                                 if (document.getData().get("uid").toString().equals(user.getUid())) {
                                     arrayList.add(new ClothReadInfo(
                                             document.getData().get("image").toString(),
-                                            document.getId()));
+                                            document.getId(),
+                                            document.getData().get("title").toString()));
                                 }
                             }
                             adapter.notifyDataSetChanged();
