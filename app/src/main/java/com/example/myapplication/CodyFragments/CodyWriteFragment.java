@@ -1,6 +1,7 @@
 package com.example.myapplication.CodyFragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -34,10 +35,18 @@ import android.widget.Toast;
 import com.example.myapplication.BoardFragments.BoardFragment;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.info.CodyInfo;
+import com.example.myapplication.info.CodyWriteInfo;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -47,15 +56,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 
+
 public class CodyWriteFragment extends Fragment {
     private static final String TAG = "MainActivity";
+    private DatabaseReference Database;
     private Uri filePath, filePath1;
+    private int i=1;
     MainActivity activity;
-    ImageView imageView, imageView1;
+    ImageView imageView, imageView1, imageView2, imageView3;
+    EditText editText, editText1;
     Button submit;
+
+
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -77,7 +95,15 @@ public class CodyWriteFragment extends Fragment {
 
         imageView = (ImageView)root.findViewById(R.id.imageHat);
         imageView1 = (ImageView)root.findViewById(R.id.imageTop);
+//        imageView2 = (ImageView)root.findViewById(R.id.imageBot);
+//        imageView3 = (ImageView)root.findViewById(R.id.imageShoe);
+        editText = (EditText)root.findViewById(R.id.et_title);
+        editText1 = (EditText)root.findViewById(R.id.et_contents);
         submit = (Button)root.findViewById(R.id.submitbtn);
+
+        Database = FirebaseDatabase.getInstance().getReference();
+
+
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,15 +124,84 @@ public class CodyWriteFragment extends Fragment {
                 startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 1);
             }
         });
+//
+//        imageView2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent, 3);
+//            }
+//        });
+//
+//        imageView3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent, 4);
+//            }
+//        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 upload();
+                String getId = editText.getText().toString();
+                String getContents = editText1.getText().toString();
+
+                HashMap result = new HashMap<>();
+                result.put("id",getId);
+                result.put("contents",getContents);
+
+                upload2("1"+i++ , getId, getContents);
             }
         });
         return root;
     }
+
+    private void upload2(String userID, String id, String contents) {
+        CodyWriteInfo user = new CodyWriteInfo(id, contents);
+
+        Database.child("User").child(userID).setValue(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Write was successful!
+//                        Toast.makeText(MainActivity.this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Write failed
+//                        Toast.makeText(MainActivity.this, "저장을 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+
+//    private void readUser(){
+//        Database.child("User").child("1").addValueEventListener(new ValueEventListener() {
+//            @SuppressLint("RestrictedApi")
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                // Get Post object and use the values to update the UI
+//                if(dataSnapshot.getValue(User.class) != null){
+//                    User post = dataSnapshot.getValue(User.class);
+//                    assert post != null;
+//                    Log.w("FireBaseData", "getData" + post.toString());
+//                } else {
+//                    //Toast.makeText(MainActivity.this, "데이터 없음...", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Getting Post failed, log a message
+//                Log.w("FireBaseData", "loadPost:onCancelled", databaseError.toException());
+//            }
+//        });
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,6 +228,58 @@ public class CodyWriteFragment extends Fragment {
             }
         }
     }
+    // Check which request we're responding to
+//        switch (requestCode) {
+//            case (1): {
+//                if (requestCode == 1) {
+//                    // Make sure the request was successful
+//                    Uri image = data.getData();
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+//                        imageView.setImageBitmap(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            case (2): {
+//                if (requestCode == 2) {
+//                    // Make sure the request was successful
+//                    Uri image = data.getData();
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+//                        imageView1.setImageBitmap(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            case (3): {
+//                if (requestCode == 3) {
+//                    // Make sure the request was successful
+//                    Uri image = data.getData();
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+//                        imageView2.setImageBitmap(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            case (4): {
+//                if (requestCode == 4) {
+//                    // Make sure the request was successful
+//                    Uri image = data.getData();
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+//                        imageView3.setImageBitmap(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+
 
     private void upload(){
         if(filePath != null){
@@ -144,7 +291,7 @@ public class CodyWriteFragment extends Fragment {
 
             SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
             Date now = new Date();
-            String filename = formatter.format(now) + "0.jpg";
+            String filename = formatter.format(now) + "Hat.jpg";
             StorageReference storageRef =storage.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
 
             storageRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -181,7 +328,7 @@ public class CodyWriteFragment extends Fragment {
 
             SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
             Date now = new Date();
-            String filename = formatter.format(now) + "1.jpg";
+            String filename = formatter.format(now) + "Top.jpg";
             StorageReference storageRef =storage1.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
 
             storageRef.putFile(filePath1).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -213,6 +360,8 @@ public class CodyWriteFragment extends Fragment {
             Toast.makeText(activity.getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
