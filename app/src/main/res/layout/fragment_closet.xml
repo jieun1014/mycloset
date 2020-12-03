@@ -121,10 +121,20 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="악세사리" />
+
+                <Button
+                    android:id="@+id/btnOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:text="기타" />
             </LinearLayout>
         </HorizontalScrollView>
 
         <SearchView
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
