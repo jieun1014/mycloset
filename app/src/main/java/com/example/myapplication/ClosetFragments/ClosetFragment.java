@@ -127,7 +127,14 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
         ClothAdapter.CustomViewHolder viewHolder = (ClothAdapter.CustomViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         String Did = (viewHolder.Did).getText().toString();
 
-        startToast(Did);
+        ClothReadFragment clothReadFragment = new ClothReadFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("Did", Did);
+        clothReadFragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.mainLayout, clothReadFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void startToast(String msg) {

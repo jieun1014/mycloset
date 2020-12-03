@@ -103,30 +103,6 @@ public class ClothWriteFragment extends Fragment {
         ArrayAdapter clothAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.clothCategory, android.R.layout.simple_spinner_dropdown_item);
         spinnerCloth.setAdapter(clothAdapter);
 
-        //이미지뷰 클릭시 갤러리 사진선택
-//        clothPicImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, REQUEST_CODE);
-//                if (ContextCompat.checkSelfPermission(getContext(),
-//                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(getActivity(),
-//                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-//                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//                    } else {
-//                        startToast("권한을 허용해 주세요.");
-//                    }
-//                } else {
-//                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
-//                    startActivityForResult(intent, 0);
-//                }
-//            }
-//        });
-
         clothPicImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
