@@ -145,23 +145,25 @@ public class CodyWriteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 upload();
-                String getId = editText.getText().toString();
+                String getTitle = editText.getText().toString();
                 String getContents = editText1.getText().toString();
+//                String getProfile = imageView.getText().toString();
 
                 HashMap result = new HashMap<>();
-                result.put("id",getId);
+                result.put("title",getTitle);
                 result.put("contents",getContents);
+//                result.put("profile",getProfile);
 
-                upload2("1"+i++ , getId, getContents);
+                upload2("1"+i++ , getTitle, getContents);
             }
         });
         return root;
     }
 
-    private void upload2(String userID, String id, String contents) {
-        CodyWriteInfo user = new CodyWriteInfo(id, contents);
+    private void upload2(String userID, String title, String contents) {
+        CodyWriteInfo user = new CodyWriteInfo(title, contents);
 
-        Database.child("User").child(userID).setValue(user)
+        Database.child("User").child(title).setValue(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

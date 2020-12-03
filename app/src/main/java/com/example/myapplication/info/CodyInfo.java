@@ -2,7 +2,7 @@ package com.example.myapplication.info;
 
 public class CodyInfo {
     private String profile;
-    private String id;
+    private String title;
     private String contents;
 
     public CodyInfo(){
@@ -14,11 +14,11 @@ public class CodyInfo {
     }
 
     public String getId() {
-        return id;
+        return title;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.title = id;
     }
 
     public String getContents() {
@@ -31,7 +31,7 @@ public class CodyInfo {
 
     public void setProfile(String profile) {
         this.profile = profile;
-        this.id = id;
+        this.title = title;
         this.contents = contents;
     }
 

@@ -2,11 +2,11 @@ package com.example.myapplication.info;
 
 public class CodyWriteInfo {
     private String profile;
-    private String id;
+    private String title;
     private String contents;
 
     public CodyWriteInfo(String id, String contents){
-        this.id = id;
+        this.title = id;
         this.contents = contents;
     }
 
@@ -15,11 +15,11 @@ public class CodyWriteInfo {
     }
 
     public String getId() {
-        return id;
+        return title;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.title = id;
     }
 
     public String getContents() {
@@ -32,7 +32,7 @@ public class CodyWriteInfo {
 
     public void setProfile(String profile) {
         this.profile = profile;
-        this.id = id;
+        this.title = title;
         this.contents = contents;
     }
 
@@ -40,7 +40,7 @@ public class CodyWriteInfo {
     public String toString() {
         return "CodyInfo{" +
                 "profile='" + profile + '\'' +
-                ", id='" + id + '\'' +
+                ", id='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
     }
