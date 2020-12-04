@@ -42,7 +42,7 @@ public class CodyAdapter extends RecyclerView.Adapter<CodyAdapter.CustomViewHold
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {//아이템 매칭
         Glide.with(context)
                 .load(arrayList.get(position).getProfile())
-//              .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%EC%83%81%EC%9D%98.jpg?alt=media&token=b3b15345-6da9-48ac-952e-db30638f651c")
+            //  .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%EC%83%81%EC%9D%98.jpg?alt=media&token=b3b15345-6da9-48ac-952e-db30638f651c")
                 .override(200,200)
                 .into(holder.imageviewcodytop);
         Glide.with(holder.itemView)
