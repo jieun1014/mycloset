@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="70dp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+
                     android:orientation="horizontal">
 
                     <TextView
@@ -36,7 +37,8 @@
                         android:gravity="center"
                         android:text="카테고리"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginLeft="10dp"/>
 
                     <RadioGroup
                         android:layout_width="wrap_content"
@@ -48,20 +50,24 @@
                             android:id="@+id/QuestionRdb"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="코디 질문" />
+                            android:text="코디 질문"
+                            android:textSize="18sp"
+                            android:layout_marginLeft="15dp"/>
 
                         <RadioButton
                             android:id="@+id/BoastRdb"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="코디 자랑" />
+                            android:text="코디 자랑"
+                            android:textSize="18sp"
+                            android:layout_marginLeft="10dp"/>
                     </RadioGroup>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -81,7 +87,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="3"
-                        android:background="@drawable/border_round2"
+                        android:background="@drawable/border_round"
                         android:inputType="text"
                         android:maxLength="50"
                         android:padding="5dp" />
@@ -90,7 +96,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="0dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -111,7 +117,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="3"
-                        android:background="@drawable/border_round2"
+                        android:background="@drawable/border_round"
                         android:inputType="textMultiLine"
                         android:maxLength="1000"
                         android:padding="5dp" />

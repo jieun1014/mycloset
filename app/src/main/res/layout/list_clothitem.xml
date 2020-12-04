@@ -25,7 +25,7 @@
         android:text="옷 이름"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:textStyle="normal"
+        android:textStyle="bold"
         android:padding="3dp"
         android:layout_marginTop="5dp"/>
 

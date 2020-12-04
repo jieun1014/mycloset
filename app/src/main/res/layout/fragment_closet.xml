@@ -8,7 +8,20 @@
     android:orientation="vertical"
     tools:context=".ClosetFragments.ClosetFragment">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="내 옷장"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:background="@drawable/background_closet"
+        android:paddingTop="20dp"/>
+
     <LinearLayout
+        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -18,13 +31,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-<!--                android:background="@drawable/border_round_gradient"-->
+
 
                 <Button
                     android:id="@+id/btnWhole"
@@ -34,7 +47,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:text="전체"
-                    android:background="@color/babyPink1"
                     />
 
                 <Button
@@ -116,8 +128,8 @@
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_round4"
+            android:layout_height="40dp"
+            android:background="@drawable/border_round"
             android:layout_marginBottom="15dp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -138,7 +150,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:src="@drawable/codyicon"
-        android:background="@drawable/border_round_gradient"
         app:fabSize="normal">
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
