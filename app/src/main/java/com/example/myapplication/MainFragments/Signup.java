@@ -28,9 +28,6 @@ public class Signup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         firebaseAuth = FirebaseAuth.getInstance();
 
         editTextEmail = (EditText) findViewById(R.id.editText_email);

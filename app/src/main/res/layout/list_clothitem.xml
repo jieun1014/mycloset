@@ -19,7 +19,7 @@
         android:id="@+id/clothNameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ff7474"
+        android:background="#E47878"
         android:gravity="center"
         android:text="옷 이름"
         android:textColor="#FFFFFF"

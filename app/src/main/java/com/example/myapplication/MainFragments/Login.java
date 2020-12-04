@@ -32,9 +32,6 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         firebaseAuth = FirebaseAuth.getInstance();
 
         editTextEmail = (EditText) findViewById(R.id.edittext_email);

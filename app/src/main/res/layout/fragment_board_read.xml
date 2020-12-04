@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="60dp"
-        android:background="#FF7474"
+        android:background="#E47878"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FF7474"
+            android:background="#E47878"
             android:orientation="vertical">
 
             <LinearLayout
@@ -158,14 +158,14 @@
                     android:id="@+id/recyclerView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FF7474"
+                    android:background="#E47878"
                     android:paddingTop="5dp"
                     android:scrollbarThumbVertical="@color/white" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FF7474"
+                    android:background="#0E478784"
                     android:gravity="bottom"
                     android:orientation="horizontal">
 
@@ -192,7 +192,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:text="작 성"
-                        android:textColor="#FF7474"
+                        android:textColor="#E47878"
                         android:textSize="18sp"
                         app:backgroundTint="#FFFFFF" />
                 </LinearLayout>

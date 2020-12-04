@@ -26,9 +26,6 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
         recyclerView = findViewById(R.id.recyclerView);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         final int numberOfColumns = 3;
 
         recyclerView.setHasFixedSize(true);
