@@ -40,6 +40,7 @@ import com.example.myapplication.info.CodyWriteInfo;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,16 +65,12 @@ import static android.app.Activity.RESULT_OK;
 public class CodyWriteFragment extends Fragment {
     private static final String TAG = "MainActivity";
     private DatabaseReference Database;
+    private FirebaseAuth auth;
     private Uri filePath, filePath1;
-    private int i=1;
     MainActivity activity;
     ImageView imageView, imageView1, imageView2, imageView3;
     EditText editText, editText1;
     Button submit;
-
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -100,10 +97,8 @@ public class CodyWriteFragment extends Fragment {
         editText = (EditText)root.findViewById(R.id.et_title);
         editText1 = (EditText)root.findViewById(R.id.et_contents);
         submit = (Button)root.findViewById(R.id.submitbtn);
-
         Database = FirebaseDatabase.getInstance().getReference();
-
-
+        auth = FirebaseAuth.getInstance();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,22 +119,6 @@ public class CodyWriteFragment extends Fragment {
                 startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 1);
             }
         });
-//
-//        imageView2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, 3);
-//            }
-//        });
-//
-//        imageView3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, 4);
-//            }
-//        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,22 +126,25 @@ public class CodyWriteFragment extends Fragment {
                 upload();
                 String getTitle = editText.getText().toString();
                 String getContents = editText1.getText().toString();
+                String getUid = auth.getCurrentUser().getUid();
+                String getProfile = filePath.getPath();
 
                 HashMap result = new HashMap<>();
                 result.put("title",getTitle);
+                result.put("uid",getUid);
                 result.put("contents",getContents);
                 result.put("profile",filePath);
 
-                upload2("1" , getTitle, getContents);
+                upload2(getUid , getTitle, getContents, getProfile);
             }
         });
         return root;
     }
 
-    private void upload2(String userID, String title, String contents) {
-        CodyWriteInfo user = new CodyWriteInfo(title, contents);
+    private void upload2(String uid, String title, String contents, String profile) {
+        CodyWriteInfo user = new CodyWriteInfo(uid ,title, contents, profile);
 
-        Database.child("User").child(title).setValue(user)
+        Database.child(uid).child(title).setValue(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -179,30 +161,6 @@ public class CodyWriteFragment extends Fragment {
                 });
 
     }
-
-
-//    private void readUser(){
-//        Database.child("User").child("1").addValueEventListener(new ValueEventListener() {
-//            @SuppressLint("RestrictedApi")
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                // Get Post object and use the values to update the UI
-//                if(dataSnapshot.getValue(User.class) != null){
-//                    User post = dataSnapshot.getValue(User.class);
-//                    assert post != null;
-//                    Log.w("FireBaseData", "getData" + post.toString());
-//                } else {
-//                    //Toast.makeText(MainActivity.this, "데이터 없음...", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                Log.w("FireBaseData", "loadPost:onCancelled", databaseError.toException());
-//            }
-//        });
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -229,58 +187,6 @@ public class CodyWriteFragment extends Fragment {
             }
         }
     }
-    // Check which request we're responding to
-//        switch (requestCode) {
-//            case (1): {
-//                if (requestCode == 1) {
-//                    // Make sure the request was successful
-//                    Uri image = data.getData();
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-//                        imageView.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            case (2): {
-//                if (requestCode == 2) {
-//                    // Make sure the request was successful
-//                    Uri image = data.getData();
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-//                        imageView1.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            case (3): {
-//                if (requestCode == 3) {
-//                    // Make sure the request was successful
-//                    Uri image = data.getData();
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-//                        imageView2.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            case (4): {
-//                if (requestCode == 4) {
-//                    // Make sure the request was successful
-//                    Uri image = data.getData();
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-//                        imageView3.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-
 
     private void upload(){
         if(filePath != null){

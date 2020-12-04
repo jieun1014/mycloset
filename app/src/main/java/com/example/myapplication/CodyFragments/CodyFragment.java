@@ -56,14 +56,13 @@ public class CodyFragment extends Fragment{
     private Context context;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<CodyInfo> arrayList;
-    private TextView Category, Title, Content, Writer, WriteDate;
-    private String Did, Uid;
+    private String Uid;
     private String[] ImageURL;
     private FloatingActionButton WriteBtn;
     private MainActivity activity;
@@ -87,8 +86,6 @@ public class CodyFragment extends Fragment{
         super.onCreate(savedInstanceState);
         recyclerView = (RecyclerView) root.findViewById(R.id.codyRecyclerView);
         recyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>();// info 담는 어레이 리스트
@@ -96,7 +93,8 @@ public class CodyFragment extends Fragment{
 
         database = FirebaseDatabase.getInstance();
 
-        databaseReference = database.getReference("User");
+        Uid = auth.getUid();
+        databaseReference = database.getReference(Uid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

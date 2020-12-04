@@ -4,12 +4,13 @@ public class CodyWriteInfo {
     private String profile;
     private String title;
     private String contents;
-//    private String uid;
+    private String uid;
 
-    public CodyWriteInfo(String title, String contents){
+    public CodyWriteInfo(String uid, String title, String contents, String profile){
         this.title = title;
         this.contents = contents;
-//        this.uid = uid;
+        this.uid = uid;
+        this.profile = profile;
     }
 
     public String getProfile() {
@@ -38,13 +39,13 @@ public class CodyWriteInfo {
         this.contents = contents;
     }
 
-//    public String getUid() {
-//        return uid;
-//    }
-//
-//    public void setUid(String uid) {
-//        this.uid = uid;
-//    }
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     @Override
     public String toString() {
