@@ -70,8 +70,10 @@
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:text="로그인"
+            android:textStyle="bold"
             android:textColor="#E47878"
-            app:backgroundTint="#FFFFFF" />
+            app:backgroundTint="#FFFFFF"
+            />
         ​
         <Button
             android:id="@+id/btn_signup"
@@ -79,6 +81,7 @@
             android:layout_height="wrap_content"
             android:background="#ffffff"
             android:text="회원가입"
+            android:textStyle="bold"
             android:textColor="#E47878"
             app:backgroundTint="#FFFFFF" />
 

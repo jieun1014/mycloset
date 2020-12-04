@@ -11,17 +11,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="15dp">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
+            android:scrollbars="none"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+<!--                android:background="@drawable/border_round_gradient"-->
 
                 <Button
                     android:id="@+id/btnWhole"
@@ -30,7 +33,9 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:text="전체" />
+                    android:text="전체"
+                    android:background="@color/babyPink1"
+                    />
 
                 <Button
                     android:id="@+id/btnOuter"
@@ -112,7 +117,8 @@
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_round4" />
+            android:background="@drawable/border_round4"
+            android:layout_marginBottom="15dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/closetView"
@@ -132,9 +138,14 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:src="@drawable/codyicon"
-        android:tint="#000000"
-        app:backgroundTint="#FFFFFF"
-        app:fabSize="normal"
-        app:rippleColor="#000000" />
+        android:background="@drawable/border_round_gradient"
+        app:fabSize="normal">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+<!--        app:rippleColor="#000000" />-->
+<!--        android:tint="#000000"-->
+<!--        app:backgroundTint="#FFFFFF"-->
+
+
 
 </FrameLayout>

@@ -68,6 +68,7 @@
         android:layout_gravity="center"
         android:background="#FFFFFF"
         android:text="Join"
+        android:textStyle="bold"
         android:textColor="#E47878"
         app:backgroundTint="#FFFEFE" />
 </LinearLayout>
