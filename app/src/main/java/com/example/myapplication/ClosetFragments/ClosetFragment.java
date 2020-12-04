@@ -83,6 +83,7 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
         root.findViewById(R.id.btnAccessary).setOnClickListener(onClickListener);
         root.findViewById(R.id.btnOther).setOnClickListener(onClickListener);
 
+
         recyclerView = root.findViewById(R.id.closetView);
         btnClosetWrite = (FloatingActionButton) root.findViewById(R.id.btnClosetWrite);
         arrayList = new ArrayList<>();
@@ -91,8 +92,9 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-
-        ReadClothes();
+        
+        category="전체";
+        ReadAllClothes();
 
         btnClosetWrite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,8 +111,13 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                arrayList.clear();
-                SearchClothes("title", query);
+                if (category.equals("전체"))  {
+                    arrayList.clear();
+                    CategoryClothes("title", query);
+                } else {
+                    arrayList.clear();
+                    SearchClothes(query, category);
+                }
                 return true;
             }
 
@@ -129,54 +136,54 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
             switch (v.getId()){
                 case R.id.btnWhole:
                     arrayList.clear();
-                    ReadClothes();
+                    ReadAllClothes();
                     category = "전체";
                     break;
                 case R.id.btnOuter:
                     arrayList.clear();
-                    SearchClothes("category", "아우터");
+                    CategoryClothes("category", "아우터");
                     category = "아우터";
                     break;
                 case R.id.btnTop:
                     arrayList.clear();
-                    SearchClothes("category", "상의");
+                    CategoryClothes("category", "상의");
                     category = "상의";
                     break;
                 case R.id.btnBottom:
                     arrayList.clear();
-                    SearchClothes("category", "하의");
+                    CategoryClothes("category", "하의");
                     category = "하의";
                     break;
                 case R.id.btnDress:
                     arrayList.clear();
-                    SearchClothes("category", "원피스");
+                    CategoryClothes("category", "원피스");
                     category = "원피스";
                     break;
                 case R.id.btnShoes:
                     arrayList.clear();
-                    SearchClothes("category", "신발");
+                    CategoryClothes("category", "신발");
                     category = "신발";
                     break;
                 case R.id.btnBag:
                     arrayList.clear();
-                    SearchClothes("category", "가방");
+                    CategoryClothes("category", "가방");
                     category = "가방";
                     break;
                 case R.id.btnAccessary:
                     arrayList.clear();
-                    SearchClothes("category", "악세사리");
+                    CategoryClothes("category", "악세사리");
                     category = "악세사리";
                    break;
                 case R.id.btnOther:
                     arrayList.clear();
-                    SearchClothes("category", "기타");
+                    CategoryClothes("category", "기타");
                     category = "기타";
                     break;
             }
         }
     };
 
-    private void ReadClothes() {
+    private void ReadAllClothes() {
         db.collection("Clothes")
                 .orderBy("uploadTime", Query.Direction.DESCENDING)
                 .get()
@@ -202,7 +209,7 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
         recyclerView.setAdapter(adapter);
     }
 
-    private void SearchClothes(String filed, String query) {
+    private void CategoryClothes(String filed, String query) {
         db.collection("Clothes")
                 .orderBy("uploadTime", Query.Direction.DESCENDING)
                 .get()
@@ -212,6 +219,33 @@ public class ClosetFragment extends Fragment implements ClothAdapter.OnListItemS
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (document.getData().get("uid").toString().equals(user.getUid()) && document.getData().get(filed).toString().contains(query)) {
+                                    arrayList.add(new ClothReadInfo(
+                                            document.getData().get("image").toString(),
+                                            document.getId(),
+                                            document.getData().get("title").toString()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+
+                        }
+                    }
+                });
+        adapter = new ClothAdapter(arrayList, getContext(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void SearchClothes(String query, String query2) {
+        db.collection("Clothes")
+                .orderBy("uploadTime", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("uid").toString().equals(user.getUid()) && document.getData().get("title").toString().contains(query)
+                                        && document.getData().get("category").toString().contains(query2)) {
                                     arrayList.add(new ClothReadInfo(
                                             document.getData().get("image").toString(),
                                             document.getId(),

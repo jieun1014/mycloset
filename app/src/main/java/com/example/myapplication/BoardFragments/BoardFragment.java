@@ -253,6 +253,7 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
         BoardReadFragment boardReadFragment = new BoardReadFragment();
         Bundle bundle = new Bundle();
         bundle.putString("Did", Did);
+        bundle.putString("positionCheck", "board");
         boardReadFragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.mainLayout, boardReadFragment);
