@@ -6,19 +6,18 @@ public class CodyInfo {
     private String contents;
 
     public CodyInfo(){
-
     }
 
     public String getProfile() {
         return profile;
     }
 
-    public String getId() {
+    public String getTitle() {
         return title;
     }
 
-    public void setId(String id) {
-        this.title = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContents() {

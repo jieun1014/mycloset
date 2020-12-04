@@ -147,14 +147,13 @@ public class CodyWriteFragment extends Fragment {
                 upload();
                 String getTitle = editText.getText().toString();
                 String getContents = editText1.getText().toString();
-//                String getProfile = imageView.getText().toString();
 
                 HashMap result = new HashMap<>();
                 result.put("title",getTitle);
                 result.put("contents",getContents);
-//                result.put("profile",getProfile);
+                result.put("profile",filePath);
 
-                upload2("1"+i++ , getTitle, getContents);
+                upload2("1" , getTitle, getContents);
             }
         });
         return root;

@@ -40,17 +40,17 @@ public class CodyAdapter extends RecyclerView.Adapter<CodyAdapter.CustomViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {//아이템 매칭
-        Glide.with(holder.itemView)
-//                .load(arrayList.get(position).getProfile())
-                .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%EC%83%81%EC%9D%98.jpg?alt=media&token=b3b15345-6da9-48ac-952e-db30638f651c")
+        Glide.with(context)
+                .load(arrayList.get(position).getProfile())
+//              .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%EC%83%81%EC%9D%98.jpg?alt=media&token=b3b15345-6da9-48ac-952e-db30638f651c")
                 .override(200,200)
                 .into(holder.imageviewcodytop);
         Glide.with(holder.itemView)
-//                .load(arrayList.get(position).getProfile())
-                .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%ED%95%98%EC%9D%98.jpg?alt=media&token=5d86800a-96ab-4eca-940f-2d659905c812")
+                .load(arrayList.get(position).getProfile())
+//                .load("https://firebasestorage.googleapis.com/v0/b/test-ae7be.appspot.com/o/Cody%2F%ED%95%98%EC%9D%98.jpg?alt=media&token=5d86800a-96ab-4eca-940f-2d659905c812")
                 .override(200,200)
                 .into(holder.imageviewcodybot);
-        holder.textviewcody.setText(arrayList.get(position).getId());
+        holder.textviewcody.setText(arrayList.get(position).getTitle());
         holder.textviewcody1.setText(arrayList.get(position).getContents());
     }
 

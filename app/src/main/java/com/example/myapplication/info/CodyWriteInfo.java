@@ -4,22 +4,24 @@ public class CodyWriteInfo {
     private String profile;
     private String title;
     private String contents;
+//    private String uid;
 
-    public CodyWriteInfo(String id, String contents){
-        this.title = id;
+    public CodyWriteInfo(String title, String contents){
+        this.title = title;
         this.contents = contents;
+//        this.uid = uid;
     }
 
     public String getProfile() {
         return profile;
     }
 
-    public String getId() {
+    public String getTitle() {
         return title;
     }
 
-    public void setId(String id) {
-        this.title = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContents() {
@@ -36,13 +38,22 @@ public class CodyWriteInfo {
         this.contents = contents;
     }
 
+//    public String getUid() {
+//        return uid;
+//    }
+//
+//    public void setUid(String uid) {
+//        this.uid = uid;
+//    }
+
     @Override
     public String toString() {
-        return "CodyInfo{" +
+        return "CodyWriteInfo{" +
                 "profile='" + profile + '\'' +
-                ", id='" + title + '\'' +
+                ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
     }
 }
+
 
