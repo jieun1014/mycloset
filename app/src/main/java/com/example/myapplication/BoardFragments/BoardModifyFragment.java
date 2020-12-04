@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.MyFragments.MyPostFragment;
 import com.example.myapplication.R;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +71,7 @@ public class BoardModifyFragment extends Fragment {
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    private String Did, Uid, Title, Contents, Category, Writer, WriteDate, Time;
+    private String Did, Uid, Title, Contents, Category, Writer, WriteDate, Time, positionCheck;
     private int PathCount, successCount;
     private String[] ImageURL;
     private ArrayList<String> pathList = new ArrayList<>();
@@ -103,6 +104,8 @@ public class BoardModifyFragment extends Fragment {
 
         if (getArguments() != null) {
             Did = getArguments().getString("Did");
+            positionCheck = getArguments().getString("positionCheck");
+            Log.e("여기여기", positionCheck);
             ReadBoard();
         }
 
@@ -326,10 +329,17 @@ public class BoardModifyFragment extends Fragment {
                                 db.collection("Boards").document(Did).set(writeBoardInfo);
                             }
 
-                            BoardFragment boardFragment = new BoardFragment();
-                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.mainLayout, boardFragment);
-                            transaction.commit();
+                            if (positionCheck.equals("board")) {
+                                BoardFragment boardFragment = new BoardFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.mainLayout, boardFragment);
+                                transaction.commit();
+                            }   else {
+                                MyPostFragment myPostFragment = new MyPostFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.mainLayout, myPostFragment);
+                                transaction.commit();
+                            }
                         }
                     });
             builder.setNegativeButton("아니오",

@@ -80,7 +80,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
 
     private ArrayList<CommentReadInfo> arrayList;
     private ArrayList<String> cidList;
-    private String Did, Uid;
+    private String Did, Uid, positionCheck;
     private String[] ImageURL;
     private int Count;
 
@@ -120,6 +120,8 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
 
         if (getArguments() != null) {
             Did = getArguments().getString("Did");
+            positionCheck = getArguments().getString("positionCheck");
+            Log.e("여기여기", positionCheck);
             ReadBoard();
         }
         ReadComment();
@@ -184,6 +186,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                                 BoardModifyFragment boardModifyFragment = new BoardModifyFragment();
                                 Bundle bundle = new Bundle();
                                 bundle.putString("Did", Did);
+                                bundle.putString("positionCheck", positionCheck);
                                 boardModifyFragment.setArguments(bundle);
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.mainLayout, boardModifyFragment);
