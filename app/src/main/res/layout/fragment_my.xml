@@ -29,6 +29,14 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/myInfoBtn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/myinfobtn" />
+
+            <ImageButton
                 android:id="@+id/myPostBtn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
@@ -36,26 +44,12 @@
                 android:src="@drawable/mypostbtn"
                 />
 
-            <ImageButton
-                android:id="@+id/myCommentBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mycommentbtn"
-                style="?android:attr/borderlessButtonStyle"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/myInfoBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/myinfobtn"
-                style="?android:attr/borderlessButtonStyle"/>
 
             <ImageButton
                 android:id="@+id/logoutBtn"

@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.MyFragments.MyPostFragment;
 import com.example.myapplication.adapter.BoardLoadAdapter;
 import com.example.myapplication.info.CommentReadInfo;
 import com.example.myapplication.info.CommentWriteInfo;
@@ -169,10 +170,17 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                                                     }
                                                 }, 3000);
 
-                                                BoardFragment boardFragment = new BoardFragment();
-                                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                                transaction.replace(R.id.mainLayout, boardFragment);
-                                                transaction.commit();
+                                                if (positionCheck.equals("board")) {
+                                                    BoardFragment boardFragment = new BoardFragment();
+                                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                                    transaction.replace(R.id.mainLayout, boardFragment);
+                                                    transaction.commit();
+                                                }   else {
+                                                    MyPostFragment myPostFragment = new MyPostFragment();
+                                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                                    transaction.replace(R.id.mainLayout, myPostFragment);
+                                                    transaction.commit();
+                                                }
                                             }
                                         });
                                 builder.setNegativeButton("아니오",
