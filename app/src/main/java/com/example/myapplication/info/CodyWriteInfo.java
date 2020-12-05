@@ -1,20 +1,46 @@
 package com.example.myapplication.info;
 
+import java.util.ArrayList;
+
 public class CodyWriteInfo {
-    private String profile;
+    private String Category;
+    private ArrayList<String> profile;
     private String title;
     private String contents;
     private String uid;
+    private String time;
 
-    public CodyWriteInfo(String uid, String title, String contents, String profile){
+    public CodyWriteInfo(String Category, String uid, String title, String contents, ArrayList<String> profile, String time) {
+        this.Category = Category;
+        this.uid = uid;
         this.title = title;
         this.contents = contents;
-        this.uid = uid;
         this.profile = profile;
+        this.time = time;
     }
 
-    public String getProfile() {
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public ArrayList<String> getProfile() {
         return profile;
+    }
+
+    public void setProfile(ArrayList<String> profile) {
+        this.profile = profile;
     }
 
     public String getTitle() {
@@ -33,12 +59,6 @@ public class CodyWriteInfo {
         this.contents = contents;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
-        this.title = title;
-        this.contents = contents;
-    }
-
     public String getUid() {
         return uid;
     }
@@ -47,14 +67,5 @@ public class CodyWriteInfo {
         this.uid = uid;
     }
 
-    @Override
-    public String toString() {
-        return "CodyWriteInfo{" +
-                "profile='" + profile + '\'' +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
-    }
 }
-
 

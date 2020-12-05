@@ -3,87 +3,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     tools:context=".CodyFragments.CodyWriteFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="코디 이름"
-            android:textSize="30sp" />
-
-        <EditText
-            android:id="@+id/et_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="코디 이름을 입력하세요" />
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageHat"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/codycap"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/border_round2"
+                    android:gravity="center"
+                    android:hint="코디 이름을 입력하세요"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/et_contents"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:gravity="center"
+                    android:hint="코디 설명(생략 가능)"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/picBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="사진 선택" />
+
+            <Button
+                android:id="@+id/submitbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="코디 등록" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageTop"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/codytop"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageBot"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/codybot"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageShoe"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/codyshoe"/>
-
-
-        </LinearLayout>
-        <EditText
-            android:id="@+id/et_contents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="코디 설명" />
-
-        <Button
-            android:id="@+id/submitbtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="등록" />
-
-    </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
