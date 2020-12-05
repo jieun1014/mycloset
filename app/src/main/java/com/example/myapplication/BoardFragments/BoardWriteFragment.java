@@ -31,13 +31,20 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.info.ReadBoardInfo;
 import com.example.myapplication.info.WriteBoardInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -63,7 +70,7 @@ public class BoardWriteFragment extends Fragment {
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
     SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
 
-    private String Title, Contents, Category;
+    private String Title, Contents, Category, Nickname;
     private int PathCount, successCount;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -177,6 +184,7 @@ public class BoardWriteFragment extends Fragment {
     }
 
     private void submit() {
+        findUserNickname();
         Title = TitleEditText.getText().toString();
         Contents = ContentsEditText.getText().toString();
 
@@ -226,7 +234,7 @@ public class BoardWriteFragment extends Fragment {
                                                         String time = nFormat.format(date);
                                                         String time2 = mFormat.format(date);
 
-                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList, "익명", time, time2, user.getUid());
+                                                        WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, contentsList, Nickname, time, time2, user.getUid());
                                                         documentReference.set(writeBoardInfo);
                                                     }
                                                 }
@@ -247,7 +255,7 @@ public class BoardWriteFragment extends Fragment {
                                 String time2 = mFormat.format(date);
                                 ArrayList<String> sample = new ArrayList();
                                 sample.add("");
-                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, "익명", time, time2, user.getUid());
+                                WriteBoardInfo writeBoardInfo = new WriteBoardInfo(Category, Title, Contents, sample, Nickname, time, time2, user.getUid());
                                 documentReference.set(writeBoardInfo);
                             }
 
@@ -269,5 +277,24 @@ public class BoardWriteFragment extends Fragment {
 
     private void startToast(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void findUserNickname () {
+        db.collection("UserInfo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("uid").toString().equals(user.getUid())) {
+                                    Nickname = document.getData().get("nickname").toString();
+                                }
+                            }
+                        } else {
+                            Nickname = "익명";
+                        }
+                    }
+                });
     }
 }
