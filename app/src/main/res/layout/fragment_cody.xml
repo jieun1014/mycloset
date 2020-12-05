@@ -8,10 +8,38 @@
     android:orientation="vertical"
     tools:context=".CodyFragments.CodyFragment">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/codyRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="415dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_round"
+            android:queryHint="제목으로 검색하세요." />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_round"
+            android:spinnerMode="dropdown"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/WriteBtn"
