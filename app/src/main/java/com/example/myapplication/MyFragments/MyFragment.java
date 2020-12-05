@@ -49,7 +49,6 @@ public class MyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_my, container, false);
 
         myPostBtn = root.findViewById(R.id.myPostBtn);
-        myCommentBtn = root.findViewById(R.id.myCommentBtn);
         myInfoBtn = root.findViewById(R.id.myInfoBtn);
         logoutBtn = root.findViewById(R.id.logoutBtn);
 

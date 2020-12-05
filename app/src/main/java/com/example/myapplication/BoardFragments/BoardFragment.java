@@ -91,14 +91,14 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 str = parent.getItemAtPosition(position).toString();
                 if (str.equals("전체")) {
+                    arrayList.clear();
                     ReadBoard();
-                    arrayList.clear();
                 } else if (str.equals("코디 질문")) {
+                    arrayList.clear();
                     ReadBoardCategory("[코디 질문]");
-                    arrayList.clear();
                 } else {
-                    ReadBoardCategory("[코디 자랑]");
                     arrayList.clear();
+                    ReadBoardCategory("[코디 자랑]");
                 }
             }
 
@@ -113,14 +113,14 @@ public class BoardFragment extends Fragment implements BoardLoadAdapter.OnListIt
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (str.equals("전체")) {
+                    arrayList.clear();
                     SearchBoardAll(query);
-                    arrayList.clear();
                 } else if (str.equals("코디 질문")) {
+                    arrayList.clear();
                     SearchBoardCategory("[코디 질문]", query);
-                    arrayList.clear();
                 } else {
-                    SearchBoardCategory("[코디 자랑]", query);
                     arrayList.clear();
+                    SearchBoardCategory("[코디 자랑]", query);
                 }
                 return true;
             }
