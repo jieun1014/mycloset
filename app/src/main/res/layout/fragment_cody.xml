@@ -25,12 +25,12 @@
             android:background="@drawable/border_round"
             android:queryHint="제목으로 검색하세요." />
 
-<!--        <Spinner-->
-<!--            android:id="@+id/spinner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@drawable/border_round"-->
-<!--            android:spinnerMode="dropdown"/>-->
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_round"
+            android:spinnerMode="dropdown"/>
 
     </LinearLayout>
 
