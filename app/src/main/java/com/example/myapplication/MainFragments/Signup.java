@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
@@ -56,23 +57,15 @@ public class Signup extends AppCompatActivity {
         editTextNickname = (EditText) findViewById(R.id.editText_nickname);
         buttonJoin = (Button) findViewById(R.id.btn_join);
 
-        //회원가입 버튼 클릭 시
         buttonJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!editTextEmail.getText().toString().equals("") && !editTextPassword.getText().toString().equals("")) {
-//                    // 이메일과 비밀번호가 공백이 아닌 경우
-//                    createUser(editTextEmail.getText().toString(), editTextPassword.getText().toString(), editTextNickname.getText().toString());
-//                } else {
-//                    // 이메일과 비밀번호가 공백인 경우
-//                    Toast.makeText(Signup.this, "계정과 비밀번호를 입력하세요.", Toast.LENGTH_LONG).show();
-//                }
-                signup();
+                signUp();
             }
         });
     }
 
-    private void signup() {
+    private void signUp() {
         nickname = editTextNickname.getText().toString();
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
@@ -80,7 +73,12 @@ public class Signup extends AppCompatActivity {
         if (TextUtils.isEmpty(nickname)
                 || TextUtils.isEmpty(email)
                 || TextUtils.isEmpty(password)) {
-            Toast.makeText(Signup.this, "정보를 바르게 입력해 주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Signup.this, "정보를 바르게 입력해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 6) {
+            Toast.makeText(Signup.this, "비밀번호는 6자 이상으로 설정해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -94,7 +92,6 @@ public class Signup extends AppCompatActivity {
 
                                 userDto.setEmail(email);
                                 userDto.setNickname(nickname);
-                                userDto.setPassword(password);
                                 userDto.setUid(task.getResult().getUser().getUid());
 
                                 firebaseFirestore.collection("UserInfo")
@@ -115,7 +112,8 @@ public class Signup extends AppCompatActivity {
                                 finish();
                             } else {
                                 if (task.getException() != null) { // 회원가입 실패시
-                                    Toast.makeText(Signup.this, "이미 존재하는 계정입니다.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Signup.this, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                    Log.w("SignUp Fail","fail : " + task.getException());
                                 }
                             }
                         }

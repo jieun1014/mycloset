@@ -2,7 +2,6 @@ package com.example.myapplication.MainFragments;
 
 public class UserDto {
     public String email;
-    public String password;
     public String nickname;
     public String uid;
 
@@ -20,14 +19,6 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getUid() {

@@ -41,7 +41,6 @@ public class Login extends AppCompatActivity {
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // SignUpActivity 연결
                 Intent intent = new Intent(Login.this, Signup.class);
                 startActivity(intent);
             }
@@ -54,7 +53,7 @@ public class Login extends AppCompatActivity {
                 if (!editTextEmail.getText().toString().equals("") && !editTextPassword.getText().toString().equals("")) {
                     loginUser(editTextEmail.getText().toString(), editTextPassword.getText().toString());
                 } else {
-                    Toast.makeText(Login.this, "계정과 비밀번호를 입력하세요.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Login.this, "이메일과 비밀번호를 입력하세요.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -84,7 +83,7 @@ public class Login extends AppCompatActivity {
                             firebaseAuth.addAuthStateListener(firebaseAuthListener);
                         } else {
                             // 로그인 실패
-                            Toast.makeText(Login.this, "아이디 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "이메일 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
