@@ -81,7 +81,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
 
     private ArrayList<CommentReadInfo> arrayList;
     private ArrayList<String> cidList;
-    private String Did, Uid, positionCheck;
+    private String Did, Uid, positionCheck, Nickname;
     private String[] ImageURL;
     private int Count;
 
@@ -293,6 +293,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         if (CommentEditText.length() == 0) {
             startToast("댓글을 입력해주세요.");
         } else {
+            findUserNickname();
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("댓글 작성");
             builder.setMessage("댓글을 작성하시겠습니까?");
@@ -306,7 +307,7 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
                             SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
                             String time = mFormat.format(date);
 
-                            CommentWriteInfo commentWriteInfo = new CommentWriteInfo("익명", Content, Did, time, documentReference.getId(), user.getUid());
+                            CommentWriteInfo commentWriteInfo = new CommentWriteInfo(Nickname, Content, Did, time, documentReference.getId(), user.getUid());
                             documentReference.set(commentWriteInfo);
                             CommentEditText.setText(null);
 
@@ -359,4 +360,22 @@ public class BoardReadFragment extends Fragment implements CommentLoadAdapter.On
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
+    private void findUserNickname () {
+        db.collection("UserInfo")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("uid").toString().equals(user.getUid())) {
+                                    Nickname = document.getData().get("nickname").toString();
+                                }
+                            }
+                        } else {
+                            Nickname = "익명";
+                        }
+                    }
+                });
+    }
 }
