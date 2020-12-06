@@ -2,6 +2,7 @@ package com.example.myapplication.CodyFragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -29,48 +30,69 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.BoardFragments.BoardFragment;
+import com.example.myapplication.ClosetFragments.ClosetFragment;
+import com.example.myapplication.ClosetFragments.ClothWriteFragment;
+import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.CodyAdapter;
 import com.example.myapplication.info.CodyInfo;
 import com.example.myapplication.info.CodyWriteInfo;
 import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 
-
 public class CodyWriteFragment extends Fragment {
     private static final String TAG = "MainActivity";
     private DatabaseReference Database;
     private FirebaseAuth auth;
-    private Uri filePath, filePath1;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private LinearLayout parent;
+    private int PathCount, successCount;
+    private String Title, Contents, Category;
+    private ArrayList<String> pathList = new ArrayList<>();
+    private ArrayList<String> contentsList = new ArrayList<>();
+
+    SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
     MainActivity activity;
-    ImageView imageView, imageView1, imageView2, imageView3;
-    EditText editText, editText1;
-    Button submit;
+
+    EditText TitleEditText, ContentsEditText;
+    Button submit, picBtn;
 
     @Override
     public void onAttach(Context context) {
@@ -84,39 +106,39 @@ public class CodyWriteFragment extends Fragment {
         activity = null;
     }
 
+    public static CodyWriteFragment newInstance() {
+        return new CodyWriteFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View root =  inflater.inflate(R.layout.fragment_cody_write, container, false);
+        View root = inflater.inflate(R.layout.fragment_cody_write, container, false);
 
-        imageView = (ImageView)root.findViewById(R.id.imageHat);
-        imageView1 = (ImageView)root.findViewById(R.id.imageTop);
-//        imageView2 = (ImageView)root.findViewById(R.id.imageBot);
-//        imageView3 = (ImageView)root.findViewById(R.id.imageShoe);
-        editText = (EditText)root.findViewById(R.id.et_title);
-        editText1 = (EditText)root.findViewById(R.id.et_contents);
-        submit = (Button)root.findViewById(R.id.submitbtn);
+        parent = root.findViewById(R.id.ic);
+        TitleEditText = (EditText) root.findViewById(R.id.et_title);
+        ContentsEditText = (EditText) root.findViewById(R.id.et_contents);
+        submit = (Button) root.findViewById(R.id.submitbtn);
         Database = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
+        picBtn = root.findViewById(R.id.picBtn);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        picBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 0);
-            }
-        });
-
-        imageView1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent.createChooser(intent,"이미지를 선택하세요"), 1);
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    } else {
+                        startToast("권한을 허용해 주세요.");
+                    }
+                } else {
+                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                    startActivityForResult(intent, 0);
+                }
             }
         });
 
@@ -124,154 +146,139 @@ public class CodyWriteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 upload();
-                String getTitle = editText.getText().toString();
-                String getContents = editText1.getText().toString();
-                String getUid = auth.getCurrentUser().getUid();
-                String getProfile = filePath.getPath();
-
-                HashMap result = new HashMap<>();
-                result.put("title",getTitle);
-                result.put("uid",getUid);
-                result.put("contents",getContents);
-                result.put("profile",filePath);
-
-                upload2(getUid , getTitle, getContents, getProfile);
             }
         });
         return root;
     }
 
-    private void upload2(String uid, String title, String contents, String profile) {
-        CodyWriteInfo user = new CodyWriteInfo(uid ,title, contents, profile);
-
-        Database.child(uid).child(title).setValue(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Write was successful!
-//                        Toast.makeText(MainActivity.this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Write failed
-//                        Toast.makeText(MainActivity.this, "저장을 실패했습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+    private void startToast(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0 && resultCode == RESULT_OK){
-            filePath = data.getData();
-            Log.d(TAG, "uri:" + String.valueOf(filePath));
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(requestCode == 1 && resultCode == RESULT_OK){
-            filePath1 = data.getData();
-            Log.d(TAG, "uri:" + String.valueOf(filePath1));
-            try {
-                Bitmap bitmap1 = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath1);
-                imageView1.setImageBitmap(bitmap1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        switch (requestCode) {
+            case 0:
+                if (resultCode == Activity.RESULT_OK) {
+                    String profilePath = data.getStringExtra("profilePath");
+                    if (pathList.size() == 6)
+                        startToast("더 이상 추가 할 수 없습니다");
+                    else {
+                        pathList.add(profilePath);
+                        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        ImageView imageView = new ImageView(getContext());
+                        imageView.setLayoutParams(layoutParams);
+                        Glide.with(activity).load(profilePath).override(500,500).into(imageView);
+                        parent.addView(imageView);
+
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startToast("사진을 길게 누르면 삭제됩니다.");
+                            }
+                        });
+
+                        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                parent.removeView(imageView);
+                                pathList.remove(profilePath);
+                                return true;
+                            }
+                        });
+                    }
+                    break;
+                }
         }
     }
 
-    private void upload(){
-        if(filePath != null){
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("업로드중");
-            progressDialog.show();
+    private void upload() {
+        Title = TitleEditText.getText().toString();
+        Contents = ContentsEditText.getText().toString();
 
-            FirebaseStorage storage = FirebaseStorage.getInstance();
+        if (Title.length() == 0 || Contents.length() == 0) {
+            startToast("모든 항목을 입력해주세요.");
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("게시글 작성");
+            builder.setMessage("게시글을 작성하시겠습니까?");
+            builder.setPositiveButton("예",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            StorageReference storageRef = storage.getReference();
+                            DocumentReference documentReference = db.collection("Codies").document();
 
-            SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
-            Date now = new Date();
-            String filename = formatter.format(now) + "Hat.jpg";
-            StorageReference storageRef =storage.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
+                            for (int i = 0; i < parent.getChildCount(); i++) {
+                                contentsList.add(pathList.get(PathCount));
+                                final StorageReference mountainImageRef = storageRef.child("CodyImages/" + documentReference.getId() + "/" + PathCount + ".jpg");
+                                try {
+                                    InputStream stream = new FileInputStream(new File(pathList.get(PathCount)));
+                                    StorageMetadata metadata = new StorageMetadata.Builder().setCustomMetadata("index", "" + PathCount).build();
+                                    UploadTask uploadTask = mountainImageRef.putStream(stream, metadata);
+                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
-            storageRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    Toast.makeText(activity.getApplicationContext(),"업로드 완료",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            final int index = Integer.parseInt(taskSnapshot.getMetadata().getCustomMetadata("index"));
+                                            mountainImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    contentsList.set(index, uri.toString());
+                                                    successCount++;
+                                                    if (pathList.size() == successCount) {
+                                                        //완료
 
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(activity.getApplicationContext(), "업로드 실패",Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests")
-                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
-                        }
-                    });
-        }
+                                                        long now = System.currentTimeMillis();
+                                                        Date date = new Date(now);
 
-        if(filePath1 != null){
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("업로드중");
-            progressDialog.show();
+                                                        String time = nFormat.format(date);
+                                                        Category = "전체";
 
-            FirebaseStorage storage1 = FirebaseStorage.getInstance();
+                                                        CodyWriteInfo CodyWriteInfo = new CodyWriteInfo(Category ,user.getUid(),Title, Contents, contentsList ,time);
+                                                        documentReference.set(CodyWriteInfo);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
 
-            SimpleDateFormat formatter = new SimpleDateFormat("MMdd_hhmm");
-            Date now = new Date();
-            String filename = formatter.format(now) + "Top.jpg";
-            StorageReference storageRef =storage1.getReferenceFromUrl("gs://test-ae7be.appspot.com/").child("Cody/" + filename);
-
-            storageRef.putFile(filePath1).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    Toast.makeText(activity.getApplicationContext(),"업로드 완료",Toast.LENGTH_SHORT).show();
-
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(activity.getApplicationContext(), "업로드 실패",Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests")
-                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                PathCount++;
+                            }
+                            if (PathCount == 0) {
+                                startToast("사진을 추가해주세요");
+                            }
                         }
                     });
-        }
 
-        else {
-            Toast.makeText(activity.getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+            builder.setNegativeButton("아니오",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            builder.show();
         }
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                    startActivity(intent);
+                } else {
+                    startToast("권한을 허용해 주세요.");
+                }
+        }
     }
+
 }
