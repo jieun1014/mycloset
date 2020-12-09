@@ -1,29 +1,20 @@
 package com.example.myapplication.CodyFragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,49 +22,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.example.myapplication.BoardFragments.BoardFragment;
-import com.example.myapplication.ClosetFragments.ClosetFragment;
-import com.example.myapplication.ClosetFragments.ClothWriteFragment;
 import com.example.myapplication.GalleryActivity;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.adapter.CodyAdapter;
-import com.example.myapplication.info.CodyInfo;
 import com.example.myapplication.info.CodyWriteInfo;
-import com.example.myapplication.info.WriteBoardInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CodyWriteFragment extends Fragment {
     private static final String TAG = "MainActivity";
@@ -88,9 +61,8 @@ public class CodyWriteFragment extends Fragment {
     private ArrayList<String> pathList = new ArrayList<>();
     private ArrayList<String> contentsList = new ArrayList<>();
 
-    SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd   HH:mm");
+    SimpleDateFormat nFormat = new SimpleDateFormat("yy.MM.dd HH:mm");
     MainActivity activity;
-
     EditText TitleEditText, ContentsEditText;
     Button submit, picBtn;
 
@@ -240,6 +212,11 @@ public class CodyWriteFragment extends Fragment {
 
                                                         CodyWriteInfo CodyWriteInfo = new CodyWriteInfo(Category ,user.getUid(),Title, Contents, contentsList ,time);
                                                         documentReference.set(CodyWriteInfo);
+
+                                                        CodyFragment codyFragment = new CodyFragment();
+                                                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                                        transaction.replace(R.id.mainLayout, codyFragment);
+                                                        transaction.commit();
                                                     }
                                                 }
                                             });
@@ -280,5 +257,4 @@ public class CodyWriteFragment extends Fragment {
                 }
         }
     }
-
 }
