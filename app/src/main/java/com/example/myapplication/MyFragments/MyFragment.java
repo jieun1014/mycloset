@@ -70,7 +70,6 @@ public class MyFragment extends Fragment {
 
         findUserNickname();
 
-        nickname.setText(Nickname);
         Log.d("Nickname test ","the Nickname is " + Nickname);
 
         myInfoBtn.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +130,7 @@ public class MyFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (document.getData().get("uid").toString().equals(user.getUid())) {
-                                    Nickname = document.getData().get("nickname").toString();
+                                    nickname.setText(document.getData().get("nickname").toString());
                                 }
                             }
                         } else {
