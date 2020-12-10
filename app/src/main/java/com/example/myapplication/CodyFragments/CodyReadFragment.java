@@ -81,7 +81,7 @@ public class CodyReadFragment extends Fragment{
         if (getArguments() != null) {
             Did = getArguments().getString("Did");
             positionCheck = getArguments().getString("positionCheck");
-            ReadBoard();
+            ReadCody();
         }
 
         MenuBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,17 +121,7 @@ public class CodyReadFragment extends Fragment{
                                         });
                                 builder.show();
                             }
-//                            else {
-//                                BoardModifyFragment boardModifyFragment = new BoardModifyFragment();
-//                                Bundle bundle = new Bundle();
-//                                bundle.putString("Did", Did);
-//                                bundle.putString("positionCheck", positionCheck);
-//                                boardModifyFragment.setArguments(bundle);
-//                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                                transaction.replace(R.id.mainLayout, boardModifyFragment);
-//                                transaction.addToBackStack(null);
-//                                transaction.commit();
-//                            }
+
                         } else  {
                             startToast("작성자가 아닙니다.");
                         }
@@ -145,7 +135,7 @@ public class CodyReadFragment extends Fragment{
         return root;
     }
 
-    private void ReadBoard() {
+    private void ReadCody() {
         DocumentReference docRef = db.collection("Codies").document(Did);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.N)

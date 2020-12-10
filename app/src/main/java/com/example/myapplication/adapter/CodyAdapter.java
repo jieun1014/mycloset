@@ -20,7 +20,6 @@ public class CodyAdapter extends RecyclerView.Adapter<CodyAdapter.CustomViewHold
 
     private ArrayList<CodyInfo> arrayList;
     private Context context;
-
     private CodyAdapter.OnListItemSelectedInterface mListener;
     public interface OnListItemSelectedInterface {
         void onItemSelected(View v, int position);
@@ -59,8 +58,6 @@ public class CodyAdapter extends RecyclerView.Adapter<CodyAdapter.CustomViewHold
         public TextView textviewcody, textviewcodycon;
         public TextView Did;
         public TextView Category;
-
-
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
