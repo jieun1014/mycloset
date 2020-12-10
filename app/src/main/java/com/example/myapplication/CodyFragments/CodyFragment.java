@@ -88,7 +88,7 @@ public class CodyFragment extends Fragment implements CodyAdapter.OnListItemSele
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 str = parent.getItemAtPosition(position).toString();
                 if (str.equals("전체")) {
-                    ReadBoard();
+                    ReadCody();
                     arrayList.clear();
                 } else if (str.equals("전체")) {
                     ReadBoardCategory("전체");
@@ -131,7 +131,7 @@ public class CodyFragment extends Fragment implements CodyAdapter.OnListItemSele
         return root;
     }
 
-    private void ReadBoard() {
+    private void ReadCody() {
         db.collection("Codies")
                 .orderBy("time", Query.Direction.DESCENDING)
                 .get()
