@@ -38,7 +38,7 @@ public class MyInfoFragment extends Fragment {
 
     private EditText nickname;
     private TextView email;
-    private Button editText_nickname_btn, modeify_email_btn, modeify_password_btn;
+    private Button editText_nickname_btn;
 
     private String Nickname = "익명", Email ="이메일", Uid, Did;
 
@@ -63,9 +63,6 @@ public class MyInfoFragment extends Fragment {
         email = (TextView) root.findViewById(R.id.editText_email);
 
         editText_nickname_btn = (Button) root.findViewById(R.id.editText_nickname_btn);
-
-        modeify_email_btn = (Button) root.findViewById(R.id.modeify_Email_btn);
-        modeify_password_btn = (Button) root.findViewById(R.id.create_New_Password_btn);
 
         getUserInfo();
 
@@ -93,20 +90,6 @@ public class MyInfoFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "닉네임 설정 규칙을 준수하세요.", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        modeify_email_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        modeify_password_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
             }
         });
 

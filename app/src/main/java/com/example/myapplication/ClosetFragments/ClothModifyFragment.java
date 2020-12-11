@@ -308,6 +308,7 @@ public class ClothModifyFragment extends Fragment {
                     Glide.with(activity).load(profilePath).override(900).into(imageView);
                     parent.removeView(clothPicImageView);
                     parent.addView(imageView);
+                    ck = 0;
 
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
